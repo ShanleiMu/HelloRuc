@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta content="origin" name="referrer">
+    <link href="{{url_for('static', filename='image/ruc.ico')}}" rel="shortcut icon" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/google.css') }}">
+    <title>Hello RUC</title>
+</head>
+
+<body>
+    <div class="content" id="main">
+        <center>
+            <div>
+                <img src="{{ url_for('static', filename='image/logo02.png')}}" height="120px">
+            </div>
+        </center>
+        <div class="outer-form">
+            <form class="tsf nj" action="/search" style="overflow:visible" id="tsf" method="GET" name="f">
+                <div class="RNNborder">
+                    <div class="inside-border">
+                        <input class="gLFyf" maxlength="2048" title="Hello RUC" aria-label="搜索" name="q">
+                        <input type="submit" class="b_searchboxSubmit" id="sb_form_go" title="Search" tabIndex="0" value="Search"/>
+                    </div>
+                </div>
+                <!-- <div class="button-area">
+                    <center> <input class="submit" value="Hello RUC 搜索" type="submit"></center>
+                </div> -->
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

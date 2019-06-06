@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:Web="http://schemas.live.com/Web/">
+
+<head>
+    <!--pc-->
+    <title>中国人民大学 - Hello RUC</title>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    <link href="{{url_for('static', filename='image/ruc.ico')}}" rel="shortcut icon" />
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bing.css')}}">
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header hidden-xs">
+                <a class="navbar-brand" href="/index/index/index.html">Hello RUC</a>
+            </div>
+            <div class=" navbar-collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li id="header-home">
+                        <a href="/index/index/index.html">首页</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="https://www.ruc.edu.cn/administration" class="dropdown-toggle"  data-toggle="dropdown">
+                            行政 <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="https://www.ruc.edu.cn/office" >学校办公室</a>
+                            </li>
+                            <li>
+                                <a href="http://jiaowu.ruc.edu.cn/" >教务处</a>
+                            </li>
+                            <li>
+                                <a href="http://zsjyc.ruc.edu.cn/">招生就业处</a>
+                            </li>
+                            <li>
+                                <a href="https://fo.ruc.edu.cn/">财务处</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="https://www.ruc.edu.cn/administration">所有行政单位</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            学院 <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="https://www.ruc.edu.cn/humanities">人文学部</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ruc.edu.cn/socialsciences">社会学部</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ruc.edu.cn/economics">经济学部</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ruc.edu.cn/lawandpolitics">法政学部</a>
+                            </li>
+                            <li>
+                                    <a href="https://www.ruc.edu.cn/scienceandtechnology">理工学部</a>
+                            </li>
+                            <li>
+                                    <a href="https://www.ruc.edu.cn/otherschools">继续教育</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="https://www.ruc.edu.cn/schools-az">所有院系</a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                        <li id="header-group">
+                                <a href="https://v.ruc.edu.cn/">微人大</a>
+                        </li>
+                   <button class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+                   <li id="header-message" class="dropdown hidden-xs" ng-controller="messages">
+                        <a id="title-msg" data-toggle="dropdown" class="dropdown-toggle" href="/index/home/getmsg.html">
+                            <span class="glyphicon glyphicon-envelope" title="联系我们" ng-bind="msgs.length"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <header id="b_header">
+                <a class="b_logoArea" href="/?FORM=Z9FD1" h="ID=SERP,5025.1">
+                    <h1 class="b_logo" title="Back to Bing search" aria-label="Go to Bing homepage">
+                        <img src="{{url_for('static', filename='image/logo02-cropped.png')}}"  style="width: 90px" />
+                    </h1>
+                </a>
+            <form action="/search" id="sb_form">
+                
+                <div class="b_searchboxForm" role="search">
+                    <input class="b_searchbox" id="sb_form_q" name="q" type="search" value="{{ query }}" />
+                    <input type="submit" class="b_searchboxSubmit" id="sb_form_go" title="Search" tabIndex="0" value="Search"/>
+                </div>
+            </form>
+            <nav class="b_scopebar" role="navigation" aria-label="Main menu"></nav>
+        </header>
+        <div id="b_content">
+            <main aria-label="Search Results">
+                <div id="b_tween">
+                    <span class="sb_count">{{ result_num }} results</span>
+                    <span class="ftrB">
+                        <a class="ftrH" id="h5113" role="button" aria-label="Filtered by Any time" aria-expanded="false" aria-controls="d5113" aria-haspopup="true"
+                            href="javascript:" h="ID=SERP,5313.1">
+                            <span class="fs_label">Any time</span>
+                            <span class="sw_ddbk"></span>
+                        </a>
+                    </span>
+                </div>
+                <div id="sp_requery">Including results for <a href="/search?q=%e4%bf%a1%e6%81%af+%e5%ad%a6%e9%99%a2&amp;FORM=AWRE" h="ID=SERP,5410.1"><strong>信息 学院</strong></a>.</div>
+                <div id="sp_recourse">Do you want results only for <a href="/search?q=%2b%e5%bf%83%e7%b3%bb%e5%ad%a6%e9%99%a2&amp;filters=rcrse%3a%221%22&amp;FORM=RCRE" h="ID=SERP,5411.1">心系学院</a>?</div>
+                <ol id="b_results">
+                    {% for link in link_list %}
+                    <li class="b_algo">
+                        <div class="b_title">
+                            <h2>
+                                <a target="_blank" href="{{ link.url }}" h="ID=SERP,5141.1">{{ link.title }}</a>
+                            </h2>
+                        </div>
+                        <div class="b_caption">
+                            <p>
+                                {{ link.caption }}
+                            </p>
+                            <div class="b_attribution b_nav">
+                                <cite> {{ link.cite }} </cite>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                    <li class="b_pag">
+                        <nav role="navigation" aria-label="More results for 中国人民大学">
+                            <h4 class="b_hide">Pagination</h4>
+                            <ul class="sb_pagF">
+                                <li>
+                                    {% if pagination.is_first_page %}
+                                    <a class="sb_inactP sb_pagP sb_pagP_bp b_widePag sb_bp b_roths"></a>
+                                    {% else %}
+                                    <a class="sb_pagP sb_pagP_bp b_widePag sb_bp b_roths" title="Previous page" href="{{ url_for('search', q=query, page=pagination.cur_page-1) }}">
+                                        <div class="sw_prev">Previous</div>
+                                    </a>
+                                    {% endif %}
+                                </li>
+                                {% for page in pagination %}
+                                <li>
+                                    {% if page == pagination.cur_page %}
+                                    <a class="sb_pagS sb_pagS_bp b_widePag sb_bp">{{ page }}</a>
+                                    {% else %}
+                                    <a class="b_widePag sb_bp" href="{{ url_for('search', q=query, page=page) }}">{{ page }}</a>
+                                    {% endif%}
+                                </li>
+                                {% endfor %}
+                                <li>
+                                    {% if pagination.is_last_page %}
+                                    <a class="sb_inactP sb_pagN sb_pagN_bp b_widePag sb_bp"></a>
+                                    {% else %}
+                                    <a class="sb_pagN sb_pagN_bp b_widePag sb_bp " title="Next page" href="{{ url_for('search', q=query, page=pagination.cur_page+1) }}"><div class="sw_next">Next</div></a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </nav>
+                    </li>
+                </ol>
+            </main>
+            <aside aria-label="Additional Results">
+                <ol id="b_context">
+                    <li class="b_ans">
+                        <a inst="ID=SERP,5636.1&amp;url=%2Fsearch%3Fq%3DFakeOverlayClickInstrumentation" id="lm_ovl_inst" class="b_hide"
+                            href="" h="ID=SERP,5636.1"></a>
+                        <div class="wpc_agp">
+                            <div id="wpc_ag">
+                                <h2 class=" b_entityTitle">中国人民大学</h2>
+                                <div class="b_lBottom">
+                                    <a href="/maps?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6&amp;v=2&amp;style=r&amp;cp=39.97098159790039~116.3141098022461&amp;lvl=11&amp;FORM=LLSV"
+                                        h="ID=SERP,5554.1">
+                                        <img id="mapMod" width="470" height="250" style="visibility:hidden" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li class="b_ans">
+                        <div class="b_rrsr">
+                            <h2 class="">Related searches</h2>
+                            <ul class="b_vList">
+                                <li>
+                                    <a href="/search?q=%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e5%ae%98%e7%bd%91%e4%b8%bb%e9%a1%b5&amp;FORM=R5FD"
+                                        h="ID=SERP,5591.1">
+                                        <strong>人民大学</strong>官网主页</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e5%ae%98%e7%bd%91&amp;FORM=R5FD1"
+                                        h="ID=SERP,5592.1">
+                                        <strong>中国人民大学</strong>官网</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e4%b8%bb%e9%a1%b5&amp;FORM=R5FD2"
+                                        h="ID=SERP,5593.1">
+                                        <strong>中国人民大学</strong>主页</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e8%8b%8f%e5%b7%9e&amp;FORM=R5FD3"
+                                        h="ID=SERP,5594.1">
+                                        <strong>中国人民大学</strong>苏州</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e5%9b%be%e4%b9%a6%e9%a6%86&amp;FORM=R5FD4"
+                                        h="ID=SERP,5595.1">
+                                        <strong>中国人民大学</strong>图书馆</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e7%a0%94%e7%a9%b6%e7%94%9f%e9%99%a2&amp;FORM=R5FD5"
+                                        h="ID=SERP,5596.1">
+                                        <strong>中国人民大学</strong>研究生院</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e5%bd%95%e5%8f%96%e5%88%86%e6%95%b0%e7%ba%bf&amp;FORM=R5FD6"
+                                        h="ID=SERP,5597.1">
+                                        <strong>中国人民大学</strong>录取分数线</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e6%8b%9b%e7%94%9f%e7%bd%91&amp;FORM=R5FD7"
+                                        h="ID=SERP,5598.1">
+                                        <strong>中国人民大学</strong>招生网</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="b_ans">
+                        <div class="b_rrsr">
+                            <h2 class="">Related English searches</h2>
+                            <ul class="b_vList">
+                                <li>
+                                    <a href="/search?q=chinese+university+of+hong+kong&amp;ensearch=1&amp;FORM=BDERS1" h="ID=SERP,5600.1">
+                                        <strong>chinese university</strong> of hong kong</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=list+of+universities+in+china&amp;ensearch=1&amp;FORM=BDERS2" h="ID=SERP,5601.1">list of universities in china</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=list+of+chinese+universities&amp;ensearch=1&amp;FORM=BDERS3" h="ID=SERP,5602.1">list of
+                                        <strong>chinese</strong> universities</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=chinese+university+ranking&amp;ensearch=1&amp;FORM=BDERS4" h="ID=SERP,5603.1">
+                                        <strong>chinese university</strong> ranking</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=university+in+china&amp;ensearch=1&amp;FORM=BDERS5" h="ID=SERP,5604.1">
+                                        <strong>university</strong> in china</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=chinese+university+system&amp;ensearch=1&amp;FORM=BDERS6" h="ID=SERP,5605.1">
+                                        <strong>chinese university</strong> system</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=top+china+universities&amp;ensearch=1&amp;FORM=BDERS7" h="ID=SERP,5606.1">top china universities</a>
+                                </li>
+                                <li>
+                                    <a href="/search?q=international+universities+in+china&amp;ensearch=1&amp;FORM=BDERS8" h="ID=SERP,5607.1">international universities in china</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ol>
+            </aside>
+        </div>
+    </div>
+</body>
+
+</html>

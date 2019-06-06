@@ -1,0 +1,92 @@
+.content {
+    padding-top: 250px;
+}
+
+.outer-form {
+    padding-top: 10px;
+}
+
+.RNNborder {
+    width: 582px;
+    background: #fff;
+    display: flex;
+    border-radius: 8px;
+    border: 1px solid #bbbec2;
+    box-shadow: none;
+    border-radius: 24px;
+    z-index: 3;
+    height: 44px;
+    margin: 0 auto;
+}
+
+.RNNborder:hover {
+    box-shadow: 0 0 10px #dfe1e5;
+}
+
+.inside-border {
+    flex: 1;
+    display: flex;
+    padding: 2px 8px 0 16px;
+    padding-left: 20px;
+}
+
+.gLFyf {
+    background-color: transparent;
+    border: none;
+    margin-top: 0;
+    padding-top: 0;
+    color: rgba(0, 0, 0, .87);
+    word-wrap: break-word;
+    outline: none;
+    display: flex;
+    flex: 100%;
+    font-size: 16px
+}
+
+.button-area {
+    padding-top: 7px
+}
+
+.submit {
+    height: 36px;
+    line-height: 27px;
+    background-image: -moz-linear-gradient(top, #f5f5f5, #f1f1f1);
+    -moz-border-radius: 2px;
+    -moz-user-select: none;
+    background-color: #f2f2f2;
+    border: 1px solid #f2f2f2;
+    border-radius: 4px;
+    color: #5F6368;
+    cursor: pointer;
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    margin: 11px 4px;
+    min-width: 54px;
+    padding: 0 16px;
+    text-align: center;
+}
+
+.submit:hover {
+    box-shadow: 0 0 3px #949597;
+    border: 1px rgb(177, 174, 174)
+}
+
+.b_searchboxSubmit {
+    background-color: #fff;
+    border-color: #fff;
+    -webkit-appearance: button;
+    cursor: pointer;
+    background-image: url(/static/image/SharedSpriteDesktop_2x_040919.png);
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 40px;
+    text-indent: -99em;
+    border-width: 0;
+    border-style: solid;
+    margin: 3px 3px 3px -3px;
+    background-position: -244px 0;
+    transform: scale(.5);
+    box-sizing: border-box;
+    color: inherit;
+    font-size: 100%;
+}
