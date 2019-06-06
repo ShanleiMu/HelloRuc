@@ -51,7 +51,8 @@ class IndexModule:
         n = 0
         for i in seg_list:
             i = i.strip().lower()
-            if i != '' and not self.is_number(i) and i not in self.stop_words:
+            # if i != '' and not self.is_number(i) and i not in self.stop_words:
+            if i != '' and i not in self.stop_words:
                 n = n + 1
                 if i in cleaned_dict:
                     cleaned_dict[i] = cleaned_dict[i] + 1

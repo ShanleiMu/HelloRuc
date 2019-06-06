@@ -25,11 +25,14 @@ class Sort:
         words = f.read()
         self.stop_words = set(words.split('\n'))
         self.index_file = config['DEFAULT']['index_output_path']
+        self.doc_file = config['DEFAULT']['content_data_path']
         self.K1 = float(config['DEFAULT']['k1'])
         self.B = float(config['DEFAULT']['b'])
         self.N = int(config['DEFAULT']['n'])
+        self.K2 = float(config['DEFAULT']['k2'])
         self.AVG_L = float(config['DEFAULT']['avg_l'])
         self.reverse_index_dict = {}
+        self.title_dict = {}
 
     def load_reverse_index(self):
         print('loading reverse index...')
@@ -45,6 +48,15 @@ class Sort:
                 for doc in doc_list:
                     doc_attribute = doc.split('\t')
                     self.reverse_index_dict[term][1].append(doc_attribute)
+
+    def load_title(self):
+        print('loading doc file...')
+        with open(self.doc_file, 'r', encoding='utf-8') as fp:
+            for line in fp:
+                line_splited = line.strip().split('|||')
+                docid = line_splited[0]
+                title = line_splited[1]
+                self.title_dict[docid] = title
 
     @staticmethod
     def is_number(s):
@@ -62,7 +74,8 @@ class Sort:
         n = 0
         for i in seg_list:
             i = i.strip().lower()
-            if i != '' and not self.is_number(i) and i not in self.stop_words:
+            # if i != '' and not self.is_number(i) and i not in self.stop_words:
+            if i != '' and i not in self.stop_words:
                 n = n + 1
                 if i in cleaned_dict:
                     cleaned_dict[i] = cleaned_dict[i] + 1
@@ -165,8 +178,10 @@ class Sort:
         n, cleaned_dict = self.clean_list(seg_list)
         print('cleaned_dict: ', cleaned_dict)
         hot_scores = {}
-        word_count = {}
-        max_count = len(cleaned_dict.keys())
+        bm25_scores = {}
+        time_scores = {}
+        # word_count = {}
+        # max_count = len(cleaned_dict.keys())
         for term in cleaned_dict.keys():
             try:
                 r = self.reverse_index_dict[term]
@@ -178,11 +193,14 @@ class Sort:
                 for doc in docs:
                     docid = doc[0]
                     date_time = doc[1]
+                    title = self.title_dict[docid]
                     tf = doc[2]
                     ld = doc[3]
                     tf = int(tf)
                     ld = int(ld)
                     bm25_score = (self.K1 * tf * w) / (tf + self.K1 * (1 - self.B + self.B * ld / self.AVG_L))
+                    if term in title:
+                        bm25_score *= self.K2
                     try:
                         news_datetime = datetime.strptime(date_time, "%Y-%m-%d")
                         now_datetime = datetime.strptime('2019-05-28', "%Y-%m-%d")
@@ -195,20 +213,27 @@ class Sort:
                     hot_score = bm25_score + time_score
                     if docid in hot_scores:
                         hot_scores[docid] = hot_scores[docid] + hot_score
-                        word_count[docid] += 1
+                        bm25_scores[docid] = bm25_scores[docid] + bm25_score
+                        time_scores[docid] = time_scores[docid] + time_score
+                        # word_count[docid] += 1
                     else:
                         hot_scores[docid] = hot_score
-                        word_count[docid] = 1
+                        bm25_scores[docid] = bm25_score
+                        time_scores[docid] = time_score
+                        # word_count[docid] = 1
             except KeyError:
                 print('can not find ' + term + ' in reverse index')
-        for doc in word_count:
-            if word_count[doc] < max_count:
-                hot_scores.pop(doc)
+        # for doc in word_count:
+        #     if word_count[doc] < max_count:
+        #         hot_scores.pop(doc)
         hot_scores = sorted(hot_scores.items(), key=lambda d: d[1], reverse=True)
+
         if len(hot_scores) < 10:
-            print(hot_scores)
+            docid_list = hot_scores
         else:
-            print(hot_scores[:10])
+            docid_list = hot_scores[0:10]
+        for i in range(len(docid_list)):
+            print(hot_scores[i][1], bm25_scores[docid_list[i][0]], time_scores[docid_list[i][0]])
         # hot_scores = self.diversify(hot_scores)
         if len(hot_scores) == 0:
             return 0, [], cleaned_dict

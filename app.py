@@ -26,6 +26,7 @@ def search():
 
 if __name__ == "__main__":
     se.load_reverse_index()
+    se.load_title()
     rs.load_doc()
 
     app.run(host='0.0.0.0')
