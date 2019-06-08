@@ -21,6 +21,53 @@ import fool
 import configparser
 from collections import Counter
 
+# this class is the only thing that can be imported from outside this file
+class Relevant(object):
+    
+    def __init__(self, relevant_things_path="src/data/processed_data/ruc_relevant_things.json"):
+        """
+        relevant_person: dict, {'docid': {'person': num shown, ...}, ...}
+        relevant_org: dict, {'docid': {'org': num shown, ...}, ...}
+        """
+        f = open(relevant_things_path, 'r', encoding='utf-8')
+        self.relevant_person, self.relevant_org = json.load(f)
+        f.close()
+
+    def get_relevant_person(self, rs: list):
+        """
+        havn't decide the weighting method yet
+        using unweighted method now, means each item in rs(list) viewed the same
+        args:
+            rs: sorted list, [('docid', score), ...], suggested length <= 10
+        return:
+            a sorted list of ('relevant person name', num shown)
+        """
+        person = dict()
+        for docid, _score in rs[:10]:
+            for p, num in self.relevant_person[docid]:
+                if p in person:
+                    person[p] += num
+                else:
+                    person[p] = num
+        return sorted(person.items(), key=lambda k: k[1], reverse=True)
+    
+    def get_relevant_org(self, rs: list):
+        """
+        havn't decide the weighting method yet
+        using unweighted method now, means each item in rs(list) viewed the same
+        args:
+            rs: sorted list, [('docid', score), ...], suggested length <= 10
+        return:
+            a sorted list of ('relevant organization name', num shown)
+        """
+        org = dict()
+        for docid, _score in rs[:10]:
+            for o, num in self.relevant_org[docid]:
+                if o in org:
+                    org[o] += num
+                else:
+                    org[o] = num
+        return sorted(org.items(), key=lambda k: k[1], reverse=True)
 
 # discarded
 def get_right_side_dynamic(doc_dict: dict, rs: list):
@@ -86,14 +133,6 @@ def save_all_relevant_things(doc_dict: dict, config):
     with open(config['DEFAULT']['relevant_things'], 'w', encoding='utf-8') as f:
         json.dump([relevant_person, relevant_org], f)
     return
-
-def load_all_relevant_things(relevant_things_path: str):
-    """
-    can be imported from outside
-    """
-    with open(relevant_things_path, 'r', encoding='utf-8') as f:
-        relevant_person, relevant_org = json.load(f)
-    return relevant_person, relevant_org
 
 if __name__ == '__main__':
     config = configparser.ConfigParser()
