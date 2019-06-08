@@ -30,6 +30,19 @@ class ReturnResult:
                 text = line_splited[4]
                 self.doc_dict[docid] = [docid, title, date, url, text]
 
+    @staticmethod
+    def deal_title(title, query_dict):
+        for term in query_dict:
+            last = 0
+            while True:
+                loc = title.find(term, last)
+                if loc == -1:
+                    break
+                else:
+                    title = title[:loc] + "<strong>" + title[loc:loc + len(term)] + "</strong>" + title[loc + len(term):]
+                    last = loc + 17 + len(term)
+        return title
+
     def return_result(self, flag, bm25_scores, cleaned_dict):
         result_list = []
         for score in bm25_scores:

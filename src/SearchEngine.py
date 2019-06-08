@@ -48,7 +48,8 @@ class SearchEngine:
                     url = r[3]
                     title = r[1]
                     date = r[2]
-                    caption = captions[docid]
+                    title = Markup(rs.deal_title(title, cleaned_dict))
+                    caption = Markup(captions[docid])
                     link_list.append(Link(url, title, date, caption))
             # print(link_list)
             # search algorithm
