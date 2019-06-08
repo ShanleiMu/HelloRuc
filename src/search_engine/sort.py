@@ -12,6 +12,7 @@ import jieba
 import math
 import configparser
 from datetime import *
+from .query_expansion import QueryExpansion
 
 
 class Sort:
@@ -33,6 +34,7 @@ class Sort:
         self.AVG_L = float(config['DEFAULT']['avg_l'])
         self.reverse_index_dict = {}
         self.title_dict = {}
+        # self.query_expansion = QueryExpansion()
 
     def load_reverse_index(self):
         print('loading reverse index...')
@@ -177,6 +179,8 @@ class Sort:
         seg_list = jieba.lcut(query, cut_all=False)
         n, cleaned_dict = self.clean_list(seg_list)
         print('cleaned_dict: ', cleaned_dict)
+        # cleaned_dict = self.query_expansion.expansion(cleaned_dict)
+        # print('cleaned_dict: ', cleaned_dict)
         hot_scores = {}
         bm25_scores = {}
         time_scores = {}
@@ -234,7 +238,7 @@ class Sort:
             docid_list = hot_scores[0:10]
         for i in range(len(docid_list)):
             print(hot_scores[i][1], bm25_scores[docid_list[i][0]], time_scores[docid_list[i][0]])
-        # hot_scores = self.diversify(hot_scores)
+        hot_scores = self.diversify(hot_scores)
         if len(hot_scores) == 0:
             return 0, [], cleaned_dict
         else:
