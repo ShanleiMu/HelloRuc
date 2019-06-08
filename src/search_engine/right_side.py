@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2019/6/4
+# @Time    : 2019/6/8
 # @Author  : GarfieldWong
 # @Email   : wangshijun@ruc.edu.cn
 # @File    : right_side.py
@@ -15,20 +15,24 @@ doc_dict: {'docid': 'docline', ...}
 relevant scores: [('docid', score), ...] # sorted
 """
 
+import json
+import time
 import fool
+import configparser
 from collections import Counter
 
 
-def get_right_side(doc_dict: dict, rs: list):
+# discarded
+def get_right_side_dynamic(doc_dict: dict, rs: list):
     """
-    find relevant person and relevant school from results showed on the left
+    find relevant person and relevant organization from results showed on the left
     args:
         doc_dict: dict, {'docid': 'docline', ...}
         rs: sorted list, [('docid', score), ...]
             len(rs) <= 10
     return:
         person: a Counter of relevant person
-        org: a Counter of relevant school 
+        org: a Counter of relevant organization 
     """
     person_list = list()
     org_list = list()
@@ -42,3 +46,63 @@ def get_right_side(doc_dict: dict, rs: list):
     # print(Counter(person_list))
     # print(Counter(org_list))
     return Counter(person_list), Counter(org_list)
+
+def get_all_relevant_things(doc_dict: dict):
+    """
+    find relevant person and relevant organization for all docs
+    args:
+        doc_dict: dict, {'docid': 'docline', ...}
+    return:
+        relevant_person: dict, {'docid': {'person': num shown, ...}, ...}
+        relevant_org: dict, {'docid': {'org': num shown, ...}, ...}
+    """
+    relevant_person = dict()
+    relevant_org = dict()
+    c = 0
+    for docid in doc_dict:
+        c += 1
+        if c % 500 == 0:
+            print(c, "docs done at", time.asctime(time.localtime(time.time())))
+        doc_line = doc_dict[docid]
+        _docid, doc_title, _doc_date, _doc_url, doc_text = doc_line.split('|||')
+        _words, ners = fool.analysis([doc_title, doc_text])
+        ners = ners[0] + ners[1]
+        person_list = [t4[3] for t4 in ners if t4[2] == 'person']
+        org_list = [t4[3] for t4 in ners if t4[2] == 'org']
+        relevant_person[docid] = Counter(person_list)
+        relevant_org[docid] = Counter(org_list)
+    return relevant_person, relevant_org
+
+def save_all_relevant_things(doc_dict: dict, config):
+    """
+    save relevant person and relevant organization for all docs
+    args:
+        doc_dict: dict, {'docid': 'docline', ...}
+    return:
+        nothing
+    """
+    relevant_person, relevant_org = get_all_relevant_things(doc_dict)
+    print("start saving at", time.asctime(time.localtime(time.time())))
+    with open(config['DEFAULT']['relevant_things'], 'w', encoding='utf-8') as f:
+        json.dump([relevant_person, relevant_org], f)
+    return
+
+def load_all_relevant_things(relevant_things_path: str):
+    """
+    can be imported from outside
+    """
+    with open(relevant_things_path, 'r', encoding='utf-8') as f:
+        relevant_person, relevant_org = json.load(f)
+    return relevant_person, relevant_org
+
+if __name__ == '__main__':
+    config = configparser.ConfigParser()
+    config.read('config.ini', 'utf-8')
+    # doc_dict = dict()
+    # with open(config['DEFAULT']['content_data_path'], 'r', encoding='utf-8') as f:
+    #     for line in f:
+    #         docid = line.split('|||')[0]
+    #         doc_dict[docid] = line
+    # print("finished loading doc_dict at", time.asctime(time.localtime(time.time())))
+    # save_all_relevant_things(doc_dict, config)
+    relevant_person, relevant_org = load_all_relevant_things(config['DEFAULT']['relevant_things'])
