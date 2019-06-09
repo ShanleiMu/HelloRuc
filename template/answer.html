@@ -114,6 +114,26 @@
                 <div id="b_tween">
                     <span class="sb_count">{{ result_num }} results</span>
                     <span class="ftrB">
+                        <a class="ftrH" id="h5114" role="button" onclick="">
+                            <span class="fs_label">
+                                {% if time_filter == "" %}
+                                Any Time
+                                {% else %}
+                                Search For {{ time_filter }}
+                                {% endif %}
+                            </span>
+                            <span class="sw_ddbk"></span>
+                        </a>
+                        <div id="d5092" class=" b_dropdown " role="menu">
+                            <div class="ftrD" id="ftrD_Any_time">
+                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, time_filter='')}}">All</a>
+                                {% for time in times %}
+                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, time_filter=time)}}">{{ time }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </span>
+                    <span class="ftrB">
                         <a class="ftrH" id="h5113" role="button" onclick="">
                             <span class="fs_label">
                                 {% if inst_filter == "" %}
@@ -125,7 +145,7 @@
                             <span class="sw_ddbk"></span>
                         </a>
                         <div id="d5091" class=" b_dropdown " role="menu">
-                            <div class="ftrD" id="ftrD_Any_time">
+                            <div class="ftrD" id="ftrD_Any_inst">
                                 <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, inst_filter='')}}">All</a>
                                 {% for inst in institutions %}
                                 <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, inst_filter=inst)}}">{{ inst }}</a>
@@ -134,21 +154,33 @@
                         </div>
                     </span>
                     <script>
-                            $(".b_dropdown").hide();
-                            $("#h5113").click(function(){
-                                if($(".b_dropdown").is(":hidden")){
-                                    $(".b_dropdown").show();
+                            $("#d5092").hide();
+                            $("#h5114").click(function(){
+                                if($("#d5092").is(":hidden")){
+                                    $("#d5092").show();
                                 }
                                 else {
-                                    $(".b_dropdown").hide();
+                                    $("#d5092").hide();
+                                }
+                            });
+                            $("#d5091").hide();
+                            $("#h5113").click(function(){
+                                if($("#d5091").is(":hidden")){
+                                    $("#d5091").show();
+                                }
+                                else {
+                                    $("#d5091").hide();
                                 }
                             });
                     </script>
                 </div>
-                {% if need_requery %}
-                <div id="sp_requery">Including results for <a href="{{ url_for('search', q='{{ query }}') }}"><strong>{{ query }}</strong></a>.</div>
-                <div id="sp_recourse">Do you want results only for <a href="{{ url_for('search', q='{{ origin_query }}') }}">{{ origin_query }}</a>?</div>
-                {% endif %}
+                <div class="sp_url">
+                    <div id="sp_extquery"><a href="{{ url_for('search', q=query, extquery=True) }}">对结果不满意？</a></div>
+                    {% if need_requery %}
+                    <div id="sp_requery">Including results for <a href="{{ url_for('search', q=query) }}"><strong>{{ query }}</strong></a>.</div>
+                    <div id="sp_recourse">Do you want results only for <a href="{{ url_for('search', q=origin_query) }}">{{ origin_query }}</a>?</div>
+                    {% endif %}
+                </div>
                 <ol id="b_results">
                     {% for link in link_list %}
                     <li class="b_algo">
