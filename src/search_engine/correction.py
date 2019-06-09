@@ -51,9 +51,9 @@ class Corrector:
 				choice = word
 			if word == query[loc]:
 				gt_value = p
-		# print(max_value)
-		# print(choice)
-		# print(gt_value)
+		print(max_value)
+		print(choice)
+		print(gt_value)
 		if max_value > -1.5 or (max_value > -5 and max_value - gt_value > diff):
 			query[loc] = choice
 			return True, query
@@ -65,7 +65,7 @@ class Corrector:
 		if use_term:
 			query = list(jieba.cut(query))
 			self.threshold = self.threshold / 2
-			# print(query)
+			print(query)
 		for i, word in enumerate(query):
 			right, left = True, True
 			if i != 0 and query[i-1] != " ":
@@ -74,8 +74,8 @@ class Corrector:
 			if i != len(query)-1 and query[i+1] != " ":
 				if word in ngdict.keys() and (query[i+1] not in ngdict[word].keys() or ngdict[word][query[i+1]] < self.threshold):
 					right = False
-			# print(left)
-			# print(right)
+			print(left)
+			print(right)
 			if (not right or not left) or (word not in ngdict.keys()):
 				update, query = self.replace(query, i, ngdict, pydict, use_term)
 
@@ -92,8 +92,4 @@ class Corrector:
 # 	print(query)
 
 # 中国人民大学室外场地使用申请表
-# 中国人民大学事外场地使用申请表
 # 刘伟校长走访慰问
-# 刘伟嚣张走访慰问
-# 教育改革在路上
-# 教育丐哥在路上

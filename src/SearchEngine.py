@@ -23,7 +23,7 @@ class Link:
 
 
 class SearchEngine:
-    def __init__(self, query="", inst_filter="", requery=True):
+    def __init__(self, query="", inst_filter="", time_filter="", requery=True, ext_query=False):
         """
         url_per_page: the amount of urls to be displayed on a body
         query: string of the query
@@ -31,8 +31,10 @@ class SearchEngine:
         """
         self.url_per_page = 10
         self.query = query
-        self.filter = inst_filter
+        self.inst_filter = inst_filter
+        self.time_filter = time_filter
         self.requery = requery
+        self.ext_query = ext_query
         self.need_requery = False
         self.origin_query = query
         self.link_list = []
@@ -41,7 +43,7 @@ class SearchEngine:
         # self.r = redis.Redis(host='localhost', port=6379)
 
     def make_redis_key(self):
-        return self.query + "_{" + self.filter + "}"
+        return self.query + "_{" + self.inst_filter + "}" + "^{" + self.time_filter + "}"
 
     def search(self):
         # link_list_raw = self.r.get(self.make_redis_key())
@@ -68,6 +70,7 @@ class SearchEngine:
         else:
             link_list = pickle.loads(link_list_raw)
         self.link_list = link_list
+        # self.link_list = [Link("www.baidu,com", "中国人民大学", "2019-06-01", "aaaaaaaaaa")] * 10
 
     @property
     def url_num(self):
