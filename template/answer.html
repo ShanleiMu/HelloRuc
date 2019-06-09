@@ -114,15 +114,41 @@
                 <div id="b_tween">
                     <span class="sb_count">{{ result_num }} results</span>
                     <span class="ftrB">
-                        <a class="ftrH" id="h5113" role="button" aria-label="Filtered by Any time" aria-expanded="false" aria-controls="d5113" aria-haspopup="true"
-                            href="javascript:" h="ID=SERP,5313.1">
-                            <span class="fs_label">Any time</span>
+                        <a class="ftrH" id="h5113" role="button" onclick="">
+                            <span class="fs_label">
+                                {% if inst_filter == "" %}
+                                Any Institution
+                                {% else %}
+                                Search For {{ inst_filter }}
+                                {% endif %}
+                            </span>
                             <span class="sw_ddbk"></span>
                         </a>
+                        <div id="d5091" class=" b_dropdown " role="menu">
+                            <div class="ftrD" id="ftrD_Any_time">
+                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, inst_filter='')}}">All</a>
+                                {% for inst in institutions %}
+                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, inst_filter=inst)}}">{{ inst }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </span>
+                    <script>
+                            $(".b_dropdown").hide();
+                            $("#h5113").click(function(){
+                                if($(".b_dropdown").is(":hidden")){
+                                    $(".b_dropdown").show();
+                                }
+                                else {
+                                    $(".b_dropdown").hide();
+                                }
+                            });
+                    </script>
                 </div>
-                <div id="sp_requery">Including results for <a href="/search?q=%e4%bf%a1%e6%81%af+%e5%ad%a6%e9%99%a2&amp;FORM=AWRE" h="ID=SERP,5410.1"><strong>信息 学院</strong></a>.</div>
-                <div id="sp_recourse">Do you want results only for <a href="/search?q=%2b%e5%bf%83%e7%b3%bb%e5%ad%a6%e9%99%a2&amp;filters=rcrse%3a%221%22&amp;FORM=RCRE" h="ID=SERP,5411.1">心系学院</a>?</div>
+                {% if need_requery %}
+                <div id="sp_requery">Including results for <a href="{{ url_for('search', q='{{ query }}') }}"><strong>{{ query }}</strong></a>.</div>
+                <div id="sp_recourse">Do you want results only for <a href="{{ url_for('search', q='{{ origin_query }}') }}">{{ origin_query }}</a>?</div>
+                {% endif %}
                 <ol id="b_results">
                     {% for link in link_list %}
                     <li class="b_algo">
@@ -179,101 +205,26 @@
             <aside aria-label="Additional Results">
                 <ol id="b_context">
                     <li class="b_ans">
-                        <a inst="ID=SERP,5636.1&amp;url=%2Fsearch%3Fq%3DFakeOverlayClickInstrumentation" id="lm_ovl_inst" class="b_hide"
-                            href="" h="ID=SERP,5636.1"></a>
-                        <div class="wpc_agp">
-                            <div id="wpc_ag">
-                                <h2 class=" b_entityTitle">中国人民大学</h2>
-                                <div class="b_lBottom">
-                                    <a href="/maps?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6&amp;v=2&amp;style=r&amp;cp=39.97098159790039~116.3141098022461&amp;lvl=11&amp;FORM=LLSV"
-                                        h="ID=SERP,5554.1">
-                                        <img id="mapMod" width="470" height="250" style="visibility:hidden" />
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    
-                    <li class="b_ans">
                         <div class="b_rrsr">
-                            <h2 class="">Related searches</h2>
+                            <h2 class="">Related People</h2>
                             <ul class="b_vList">
+                                {% for people in rel_people %}
                                 <li>
-                                    <a href="/search?q=%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e5%ae%98%e7%bd%91%e4%b8%bb%e9%a1%b5&amp;FORM=R5FD"
-                                        h="ID=SERP,5591.1">
-                                        <strong>人民大学</strong>官网主页</a>
+                                    <a href="{{ people[1] }}">{{ people[0] }}</a>
                                 </li>
-                                <li>
-                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e5%ae%98%e7%bd%91&amp;FORM=R5FD1"
-                                        h="ID=SERP,5592.1">
-                                        <strong>中国人民大学</strong>官网</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e4%b8%bb%e9%a1%b5&amp;FORM=R5FD2"
-                                        h="ID=SERP,5593.1">
-                                        <strong>中国人民大学</strong>主页</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e8%8b%8f%e5%b7%9e&amp;FORM=R5FD3"
-                                        h="ID=SERP,5594.1">
-                                        <strong>中国人民大学</strong>苏州</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e5%9b%be%e4%b9%a6%e9%a6%86&amp;FORM=R5FD4"
-                                        h="ID=SERP,5595.1">
-                                        <strong>中国人民大学</strong>图书馆</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e7%a0%94%e7%a9%b6%e7%94%9f%e9%99%a2&amp;FORM=R5FD5"
-                                        h="ID=SERP,5596.1">
-                                        <strong>中国人民大学</strong>研究生院</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e5%bd%95%e5%8f%96%e5%88%86%e6%95%b0%e7%ba%bf&amp;FORM=R5FD6"
-                                        h="ID=SERP,5597.1">
-                                        <strong>中国人民大学</strong>录取分数线</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=%e4%b8%ad%e5%9b%bd%e4%ba%ba%e6%b0%91%e5%a4%a7%e5%ad%a6%e6%8b%9b%e7%94%9f%e7%bd%91&amp;FORM=R5FD7"
-                                        h="ID=SERP,5598.1">
-                                        <strong>中国人民大学</strong>招生网</a>
-                                </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </li>
                     <li class="b_ans">
                         <div class="b_rrsr">
-                            <h2 class="">Related English searches</h2>
+                            <h2 class="">Related Institutions</h2>
                             <ul class="b_vList">
+                                {% for inst in rel_inst %}
                                 <li>
-                                    <a href="/search?q=chinese+university+of+hong+kong&amp;ensearch=1&amp;FORM=BDERS1" h="ID=SERP,5600.1">
-                                        <strong>chinese university</strong> of hong kong</a>
+                                    <a href=" {{ inst[1] }}">{{ inst[0] }}</a>
                                 </li>
-                                <li>
-                                    <a href="/search?q=list+of+universities+in+china&amp;ensearch=1&amp;FORM=BDERS2" h="ID=SERP,5601.1">list of universities in china</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=list+of+chinese+universities&amp;ensearch=1&amp;FORM=BDERS3" h="ID=SERP,5602.1">list of
-                                        <strong>chinese</strong> universities</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=chinese+university+ranking&amp;ensearch=1&amp;FORM=BDERS4" h="ID=SERP,5603.1">
-                                        <strong>chinese university</strong> ranking</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=university+in+china&amp;ensearch=1&amp;FORM=BDERS5" h="ID=SERP,5604.1">
-                                        <strong>university</strong> in china</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=chinese+university+system&amp;ensearch=1&amp;FORM=BDERS6" h="ID=SERP,5605.1">
-                                        <strong>chinese university</strong> system</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=top+china+universities&amp;ensearch=1&amp;FORM=BDERS7" h="ID=SERP,5606.1">top china universities</a>
-                                </li>
-                                <li>
-                                    <a href="/search?q=international+universities+in+china&amp;ensearch=1&amp;FORM=BDERS8" h="ID=SERP,5607.1">international universities in china</a>
-                                </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </li>

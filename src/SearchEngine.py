@@ -2,7 +2,7 @@ import math
 import re
 from flask import Markup, url_for
 import pickle
-# import redis
+import redis
 from src.search_engine.main import se, rs
 
 
@@ -23,7 +23,7 @@ class Link:
 
 
 class SearchEngine:
-    def __init__(self, query=""):
+    def __init__(self, query="", inst_filter="", requery=True):
         """
         url_per_page: the amount of urls to be displayed on a body
         query: string of the query
@@ -31,13 +31,20 @@ class SearchEngine:
         """
         self.url_per_page = 10
         self.query = query
+        self.filter = inst_filter
+        self.requery = requery
+        self.need_requery = False
+        self.origin_query = query
         self.link_list = []
-        # self.r = redis.Redis(host='localhost', port=6379)
+        self.rel_people = []
+        self.rel_inst = []
+        self.r = redis.Redis(host='localhost', port=6379)
+
+    def make_redis_key(self):
+        return self.query + "_{" + self.filter + "}"
 
     def search(self):
-        print(self.query)
-        # link_list_raw = self.r.get(self.query)
-        link_list_raw = None
+        link_list_raw = self.r.get(self.make_redis_key())
         if link_list_raw is None:
             link_list = []
             flag, scores, cleaned_dict = se.result_by_hot(self.query)
@@ -51,20 +58,10 @@ class SearchEngine:
                     title = Markup(rs.deal_title(title, cleaned_dict))
                     caption = Markup(captions[docid])
                     link_list.append(Link(url, title, date, caption))
-            # print(link_list)
-            # search algorithm
-            # url = "https://www.ruc.edu.cn/home1024"
-            # title = "中国人民大学 | RENMIN UNIVERSITY of CHINA"
-            # date = "2019-05-31"
-            # caption = Markup("<strong>中国人民大学</strong> %s") % "成立国内首个中共党史党建研究院 进一步加强党史党建学科建设 (2017-07-01) 国际 港澳台 国内 合作办学 靳诺书记率团访问土耳其 刘延东副总理为人大共建"
-            # for i in range(60):
-            #     link_list.append(Link(url, title, date, caption))
-
-            # self.r.set(self.query, pickle.dumps(link_list))
-        # else:
-        #     link_list = pickle.loads(link_list_raw)
-        # self.link_list = link_list
-            self.link_list = link_list
+                self.r.set(self.make_redis_key(), pickle.dumps(link_list))
+        else:
+            link_list = pickle.loads(link_list_raw)
+        self.link_list = link_list
 
     @property
     def url_num(self):
@@ -97,4 +94,4 @@ class SearchEngine:
             return []
 
     def get_result(self, page):
-        return self.url_num, self.get_page_list(page)
+        return self.url_num, self.need_requery, self.origin_query, self.query, self.get_page_list(page), self.rel_people, self.rel_inst
