@@ -46,7 +46,7 @@ class Relevant(object):
         """
         person = dict()
         for docid, _score in scores[:10]:
-            for p, num in self.relevant_person[docid]:
+            for p, num in self.relevant_person[docid].items():
                 if p in person:
                     person[p] += num
                 else:
@@ -64,7 +64,7 @@ class Relevant(object):
         """
         org = dict()
         for docid, _score in scores[:10]:
-            for o, num in self.relevant_org[docid]:
+            for o, num in self.relevant_org[docid].items():
                 if o in org:
                     org[o] += num
                 else:
