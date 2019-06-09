@@ -3,7 +3,7 @@ import re
 from flask import Markup, url_for
 import pickle
 # import redis
-from src.search_engine.main import se, rs, co
+from src.search_engine.main import se, rs, rel, co
 
 
 class Link:
@@ -38,8 +38,8 @@ class SearchEngine:
         self.need_requery = False
         self.origin_query = query
         self.link_list = []
-        self.rel_people = []
-        self.rel_inst = []
+        self.rel_people = [] # list of ('person name', 'url')
+        self.rel_inst = [] # list of ('org name', 'url')
         # self.r = redis.Redis(host='localhost', port=6379)
 
     def make_redis_key(self):
@@ -70,7 +70,12 @@ class SearchEngine:
         else:
             link_list = pickle.loads(link_list_raw)
         self.link_list = link_list
+<<<<<<< HEAD
+        self.rel_people = rel.get_relevant_person(scores[:10])
+        self.rel_inst = rel.get_relevant_org(scores[:10])
+=======
         # self.link_list = [Link("www.baidu,com", "中国人民大学", "2019-06-01", "aaaaaaaaaa")] * 10
+>>>>>>> 5dc140913af481765f3d61470805185bd6af9dd3
 
     @property
     def url_num(self):
