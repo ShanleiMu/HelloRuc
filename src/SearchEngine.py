@@ -3,7 +3,7 @@ import re
 from flask import Markup, url_for
 import pickle
 # import redis
-from src.search_engine.main import se, rs
+from src.search_engine.main import se, rs, co
 
 
 class Link:
@@ -46,8 +46,13 @@ class SearchEngine:
     def search(self):
         # link_list_raw = self.r.get(self.make_redis_key())
         link_list_raw = None
+        
         if link_list_raw is None:
             link_list = []
+            if self.requery:
+                update1, self.query = co.detect(self.query, co.dict, co.pinyin)
+                update2, self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
+                self.need_requery = update1 or update2
             flag, scores, cleaned_dict = se.result_by_hot(self.query)
             flag, result_list, captions = rs.return_result(flag, scores, cleaned_dict)
             if flag:
