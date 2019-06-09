@@ -1,8 +1,10 @@
 import gensim
 # 阈值和词向量还可以进行修改
 
-class Query_expansion:
-    def __init__(self, embedding_path = '../data/gensim_vectors.txt'):
+
+class QueryExpansion:
+    def __init__(self, embedding_path='src/data/gensim_vectors.txt'):
+        print('loading word embedding ...')
         self.model = gensim.models.KeyedVectors.load_word2vec_format(embedding_path, binary=False)
 
     def expansion(self, keyword_dict):
