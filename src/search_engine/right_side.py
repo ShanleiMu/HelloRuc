@@ -15,6 +15,7 @@ doc_dict: {'docid': 'docline', ...}
 relevant scores: [('docid', score), ...] # sorted
 """
 
+import re
 import json
 import time
 import fool
@@ -29,21 +30,22 @@ class Relevant(object):
         relevant_person: dict, {'docid': {'person': num shown, ...}, ...}
         relevant_org: dict, {'docid': {'org': num shown, ...}, ...}
         """
+        self.url_prefix = "https://www.baidu.com/s?wd=" # + "person_name/org_name"
         f = open(relevant_things_path, 'r', encoding='utf-8')
         self.relevant_person, self.relevant_org = json.load(f)
         f.close()
 
-    def get_relevant_person(self, rs: list):
+    def get_relevant_person(self, scores: list):
         """
         havn't decide the weighting method yet
-        using unweighted method now, means each item in rs(list) viewed the same
+        using unweighted method now, means each item in scores(list) viewed the same
         args:
-            rs: sorted list, [('docid', score), ...], suggested length <= 10
+            scores: sorted list, [('docid', score), ...], suggested length <= 10
         return:
             a sorted list of ('relevant person name', num shown)
         """
         person = dict()
-        for docid, _score in rs[:10]:
+        for docid, _score in scores[:10]:
             for p, num in self.relevant_person[docid]:
                 if p in person:
                     person[p] += num
@@ -51,23 +53,47 @@ class Relevant(object):
                     person[p] = num
         return sorted(person.items(), key=lambda k: k[1], reverse=True)
     
-    def get_relevant_org(self, rs: list):
+    def get_relevant_org(self, scores: list):
         """
         havn't decide the weighting method yet
-        using unweighted method now, means each item in rs(list) viewed the same
+        using unweighted method now, means each item in scores(list) viewed the same
         args:
-            rs: sorted list, [('docid', score), ...], suggested length <= 10
+            scores: sorted list, [('docid', score), ...], suggested length <= 10
         return:
             a sorted list of ('relevant organization name', num shown)
         """
         org = dict()
-        for docid, _score in rs[:10]:
+        for docid, _score in scores[:10]:
             for o, num in self.relevant_org[docid]:
                 if o in org:
                     org[o] += num
                 else:
                     org[o] = num
         return sorted(org.items(), key=lambda k: k[1], reverse=True)
+
+    def get_relevant_person_with_url(self, scores: list):
+        """
+        args:
+            scores: sorted list, [('docid', score), ...], suggested length <= 10
+        return:
+            a list of ('relevant person name', 'url')
+            'relevant person name' is sorted
+        """
+        person_score_list = self.get_relevant_person(scores)
+        person_url_list = [(person_name, self.url_prefix + person_name) for person_name, _score in person_score_list]
+        return person_url_list
+
+    def get_relevant_org_with_url(self, scores: list):
+        """
+        args:
+            scores: sorted list, [('docid', score), ...], suggested length <= 10
+        return:
+            a list of ('relevant org name', 'url')
+            'relevant org name' is sorted
+        """
+        org_score_list = self.get_relevant_org(scores)
+        org_url_list = [(org_name, self.url_prefix + org_name) for org_name, _score in org_score_list]
+        return org_url_list
 
 # discarded
 def get_right_side_dynamic(doc_dict: dict, rs: list):
@@ -144,4 +170,6 @@ if __name__ == '__main__':
     #         doc_dict[docid] = line
     # print("finished loading doc_dict at", time.asctime(time.localtime(time.time())))
     # save_all_relevant_things(doc_dict, config)
-    relevant_person, relevant_org = load_all_relevant_things(config['DEFAULT']['relevant_things'])
+    # relevant_person, relevant_org = load_all_relevant_things(config['DEFAULT']['relevant_things'])
+    re = Relevant(config['DEFAULT']['relevant_things'])
+    # re.relevant_person, re.relevant_org

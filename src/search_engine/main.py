@@ -6,7 +6,9 @@
 
 from .sort import Sort
 from .return_result import ReturnResult
+from .right_side import Relevant
 
 
 se = Sort('config.ini', 'utf-8')
 rs = ReturnResult('config.ini', 'utf-8')
+rel = Relevant()
