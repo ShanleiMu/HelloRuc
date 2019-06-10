@@ -218,7 +218,7 @@ class Sort:
                     except ValueError:
                         td = 25000.00
                     bm25_score = math.log(bm25_score + 1)
-                    time_score = 1 / (td + 100)
+                    time_score = math.exp((1 + 10) / (td + 20))
                     hot_score = bm25_score + time_score
                     if docid in hot_scores:
                         hot_scores[docid] = hot_scores[docid] + hot_score
