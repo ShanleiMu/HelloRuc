@@ -3,7 +3,7 @@ import re
 from flask import Markup, url_for
 import pickle
 # import redis
-from src.search_engine.main import se, rs, rel, co
+from src.search_engine.main import se, rs, rel, co, qe
 
 
 class Link:
@@ -46,7 +46,7 @@ class SearchEngine:
         # self.r = redis.Redis(host='localhost', port=6379)
 
     def make_redis_key(self):
-        return self.query + "_{" + self.inst_filter + "}" + "^{" + self.time_filter + "}"
+        return self.query + "_{" + self.inst_filter + "}" + "^{" + self.time_filter + "}" + str(self.requery)
 
     def search(self):
         # link_list_raw = self.r.get(self.make_redis_key())
@@ -58,7 +58,10 @@ class SearchEngine:
                 update1, self.query = co.detect(self.query, co.dict, co.pinyin)
                 update2, self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
                 self.need_requery = update1 or update2
-            flag, scores, cleaned_dict = se.result_by_hot(self.query)
+            cleaned_dict = se.split_query(self.query)
+            if self.ext_query:
+                cleaned_dict = qe.expansion(cleaned_dict)
+            flag, scores, cleaned_dict = se.result_by_hot(cleaned_dict)
             flag, result_list, captions = rs.return_result(flag, scores, cleaned_dict)
             if flag:
                 for r in result_list:
@@ -77,6 +80,7 @@ class SearchEngine:
         left_side_score = [(link.docid, pos) for link, pos in zip(left_side, range(self.per_page, 0, -1))]
         self.rel_people = rel.get_relevant_person_with_url(left_side_score)
         self.rel_inst = rel.get_relevant_org_with_url(left_side_score)
+
 
     @property
     def url_num(self):

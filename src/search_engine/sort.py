@@ -177,9 +177,12 @@ class Sort:
         else:
             return 1, time_scores, cleaned_dict
 
-    def result_by_hot(self, query):
+    def split_query(self, query):
         seg_list = jieba.lcut(query, cut_all=False)
         n, cleaned_dict = self.clean_list(seg_list)
+        return cleaned_dict
+
+    def result_by_hot(self, cleaned_dict):
         print('cleaned_dict: ', cleaned_dict)
         # cleaned_dict = self.query_expansion.expansion(cleaned_dict)
         # print('cleaned_dict: ', cleaned_dict)
