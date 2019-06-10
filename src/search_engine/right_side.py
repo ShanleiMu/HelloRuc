@@ -21,6 +21,7 @@ import time
 import fool
 import configparser
 from collections import Counter
+# from flask import url_for
 
 # this class is the only thing that can be imported from outside this file
 class Relevant(object):
@@ -30,7 +31,8 @@ class Relevant(object):
         relevant_person: dict, {'docid': {'person': num shown, ...}, ...}
         relevant_org: dict, {'docid': {'org': num shown, ...}, ...}
         """
-        self.url_prefix = "https://www.baidu.com/s?wd=" # + "person_name/org_name"
+        # self.url_prefix = "https://www.baidu.com/s?wd=" # + "person_name/org_name"
+        self.url_prefix = "http://127.0.0.1:5000/search/?q=" # + "person_name/org_name"
         f = open(relevant_things_path, 'r', encoding='utf-8')
         self.relevant_person, self.relevant_org = json.load(f)
         f.close()
@@ -80,7 +82,8 @@ class Relevant(object):
             'relevant person name' is sorted
         """
         person_score_list = self.get_relevant_person(scores)
-        person_url_list = [(person_name, self.url_prefix + person_name) for person_name, _score in person_score_list]
+        # person_url_list = [(person_name, url_for('search', q=person_name)) for person_name, _score in person_score_list]
+        person_url_list = [(person_name, self.url_prefix + person_name) for person_name, _score in person_score_list]        
         return person_url_list
 
     def get_relevant_org_with_url(self, scores: list):
@@ -92,6 +95,7 @@ class Relevant(object):
             'relevant org name' is sorted
         """
         org_score_list = self.get_relevant_org(scores)
+        # org_url_list = [(org_name, url_for('search', q=org_name)) for org_name, _score in org_score_list]
         org_url_list = [(org_name, self.url_prefix + org_name) for org_name, _score in org_score_list]
         return org_url_list
 

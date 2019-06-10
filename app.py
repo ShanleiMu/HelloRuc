@@ -34,7 +34,7 @@ def search():
 
     if query == "":
         return render_template("index.html")
-    search_engine = SearchEngine(query=query, requery=requery, inst_filter=inst_filter,
+    search_engine = SearchEngine(query=query, page=cur_page, per_page=Pagination.per_page, requery=requery, inst_filter=inst_filter,
                                  time_filter=time_filter, ext_query=ext_query)
     search_engine.search()
     result_num, need_requery, origin_query, query, link_list, rel_people, rel_inst = search_engine.get_result(cur_page)
