@@ -77,12 +77,12 @@ class Corrector:
 		return update, "".join(query)
 
 
-corrector = Corrector('./config.ini', 'utf-8')
-# print(corrector.dict['北']['美'])
-while True:
-	update1, query = corrector.detect(input('query: '), corrector.dict, corrector.pinyin)
-	update2, query = corrector.detect(query, corrector.dict_term, corrector.pinyin_term, True)
-	print(query)
+# corrector = Corrector('./config.ini', 'utf-8')
+# # print(corrector.dict['北']['美'])
+# while True:
+# 	update1, query = corrector.detect(input('query: '), corrector.dict, corrector.pinyin)
+# 	update2, query = corrector.detect(query, corrector.dict_term, corrector.pinyin_term, True)
+# 	print(query)
 
 # 中国人民大学室外场地使用申请表
 # 刘伟校长走访慰问
