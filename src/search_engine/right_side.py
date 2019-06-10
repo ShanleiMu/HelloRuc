@@ -26,13 +26,16 @@ from collections import Counter
 # this class is the only thing that can be imported from outside this file
 class Relevant(object):
     
+    num_rightside_person = 10
+    num_rightside_org = 10
+    # self.url_prefix = "https://www.baidu.com/s?wd=" # + "person_name/org_name"
+    url_prefix = "http://127.0.0.1:5000/search/?q=" # + "person_name/org_name"
+
     def __init__(self, relevant_things_path="src/data/processed_data/ruc_relevant_things.json"):
         """
         relevant_person: dict, {'docid': {'person': num shown, ...}, ...}
         relevant_org: dict, {'docid': {'org': num shown, ...}, ...}
         """
-        # self.url_prefix = "https://www.baidu.com/s?wd=" # + "person_name/org_name"
-        self.url_prefix = "http://127.0.0.1:5000/search/?q=" # + "person_name/org_name"
         f = open(relevant_things_path, 'r', encoding='utf-8')
         self.relevant_person, self.relevant_org = json.load(f)
         f.close()
@@ -53,7 +56,7 @@ class Relevant(object):
                     person[p] += num
                 else:
                     person[p] = num
-        return sorted(person.items(), key=lambda k: k[1], reverse=True)
+        return sorted(person.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_person]
     
     def get_relevant_org(self, scores: list):
         """
@@ -71,7 +74,7 @@ class Relevant(object):
                     org[o] += num
                 else:
                     org[o] = num
-        return sorted(org.items(), key=lambda k: k[1], reverse=True)
+        return sorted(org.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_org]
 
     def get_relevant_person_with_url(self, scores: list):
         """
