@@ -10,7 +10,8 @@ class Link:
     pattern_prefix = re.compile(r'.*://')
     pattern_suffix = re.compile(r'/.*')
 
-    def __init__(self, url, title, date, caption):
+    def __init__(self, docid, url, title, date, caption):
+        self.docid = docid
         self.url = url
         self.title = title
         self.date = date
@@ -23,7 +24,7 @@ class Link:
 
 
 class SearchEngine:
-    def __init__(self, query="", inst_filter="", time_filter="", requery=True, ext_query=False):
+    def __init__(self, query="", page=1, per_page=10, inst_filter="", time_filter="", requery=True, ext_query=False):
         """
         url_per_page: the amount of urls to be displayed on a body
         query: string of the query
@@ -31,6 +32,8 @@ class SearchEngine:
         """
         self.url_per_page = 10
         self.query = query
+        self.page = page
+        self.per_page = 10
         self.inst_filter = inst_filter
         self.time_filter = time_filter
         self.requery = requery
@@ -65,17 +68,15 @@ class SearchEngine:
                     date = r[2]
                     title = Markup(rs.deal_title(title, cleaned_dict))
                     caption = Markup(captions[docid])
-                    link_list.append(Link(url, title, date, caption))
+                    link_list.append(Link(docid, url, title, date, caption))
                 # self.r.set(self.make_redis_key(), pickle.dumps(link_list))
         else:
             link_list = pickle.loads(link_list_raw)
         self.link_list = link_list
-<<<<<<< HEAD
-        self.rel_people = rel.get_relevant_person(scores[:10])
-        self.rel_inst = rel.get_relevant_org(scores[:10])
-=======
-        # self.link_list = [Link("www.baidu,com", "中国人民大学", "2019-06-01", "aaaaaaaaaa")] * 10
->>>>>>> 5dc140913af481765f3d61470805185bd6af9dd3
+        left_side = self.link_list[(self.page-1)*self.per_page : self.page*self.per_page]
+        left_side_score = [(link.docid, pos) for link, pos in zip(left_side, range(self.per_page, 0, -1))]
+        self.rel_people = rel.get_relevant_person_with_url(left_side_score)
+        self.rel_inst = rel.get_relevant_org_with_url(left_side_score)
 
     @property
     def url_num(self):
