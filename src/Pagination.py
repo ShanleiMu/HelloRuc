@@ -6,10 +6,11 @@ class Pagination:
     window = 5
 
     def __init__(self, cur, total):
-        self.cur_page = cur
         self.total_url = total
         self.total_page = math.ceil(self.total_url / self.per_page)
+        self.cur_page = max(cur, self.total_page)
         self.page_window = self.get_page_window()
+
 
     @property
     def is_first_page(self):

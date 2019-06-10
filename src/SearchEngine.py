@@ -43,7 +43,7 @@ class SearchEngine:
         # self.r = redis.Redis(host='localhost', port=6379)
 
     def make_redis_key(self):
-        return self.query + "_{" + self.inst_filter + "}" + "^{" + self.time_filter + "}"
+        return self.query + "_{" + self.inst_filter + "}" + "^{" + self.time_filter + "}" + str(self.requery)
 
     def search(self):
         # link_list_raw = self.r.get(self.make_redis_key())
