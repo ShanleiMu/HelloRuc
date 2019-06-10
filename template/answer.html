@@ -103,7 +103,7 @@
             <form action="/search" id="sb_form">
                 
                 <div class="b_searchboxForm" role="search">
-                    <input class="b_searchbox" id="sb_form_q" name="q" type="search" value="{{ query }}" />
+                    <input class="b_searchbox" id="sb_form_q" name="q" type="search" value="{{ origin_query }}" />
                     <input type="submit" class="b_searchboxSubmit" id="sb_form_go" title="Search" tabIndex="0" value="Search"/>
                 </div>
             </form>
@@ -178,7 +178,7 @@
                     <div id="sp_extquery"><a href="{{ url_for('search', q=query, extquery=True) }}">对结果不满意？</a></div>
                     {% if need_requery %}
                     <div id="sp_requery">Including results for <a href="{{ url_for('search', q=query) }}"><strong>{{ query }}</strong></a>.</div>
-                    <div id="sp_recourse">Do you want results only for <a href="{{ url_for('search', q=origin_query) }}">{{ origin_query }}</a>?</div>
+                    <div id="sp_recourse">Do you want results only for <a href="{{ url_for('search', q=origin_query, ast_sw='off') }}">{{ origin_query }}</a>?</div>
                     {% endif %}
                 </div>
                 <ol id="b_results">
@@ -208,7 +208,7 @@
                                     {% if pagination.is_first_page %}
                                     <a class="sb_inactP sb_pagP sb_pagP_bp b_widePag sb_bp b_roths"></a>
                                     {% else %}
-                                    <a class="sb_pagP sb_pagP_bp b_widePag sb_bp b_roths" title="Previous page" href="{{ url_for('search', q=query, page=pagination.cur_page-1) }}">
+                                    <a class="sb_pagP sb_pagP_bp b_widePag sb_bp b_roths" title="Previous page" href="{{ url_for('search', q=origin_query, page=pagination.cur_page-1, ast_sw='off') }}">
                                         <div class="sw_prev">Previous</div>
                                     </a>
                                     {% endif %}
@@ -218,7 +218,7 @@
                                     {% if page == pagination.cur_page %}
                                     <a class="sb_pagS sb_pagS_bp b_widePag sb_bp">{{ page }}</a>
                                     {% else %}
-                                    <a class="b_widePag sb_bp" href="{{ url_for('search', q=query, page=page) }}">{{ page }}</a>
+                                    <a class="b_widePag sb_bp" href="{{ url_for('search', q=origin_query, page=page, ast_sw='off') }}">{{ page }}</a>
                                     {% endif%}
                                 </li>
                                 {% endfor %}
@@ -226,7 +226,7 @@
                                     {% if pagination.is_last_page %}
                                     <a class="sb_inactP sb_pagN sb_pagN_bp b_widePag sb_bp"></a>
                                     {% else %}
-                                    <a class="sb_pagN sb_pagN_bp b_widePag sb_bp " title="Next page" href="{{ url_for('search', q=query, page=pagination.cur_page+1) }}"><div class="sw_next">Next</div></a>
+                                    <a class="sb_pagN sb_pagN_bp b_widePag sb_bp " title="Next page" href="{{ url_for('search', q=origin_query, page=pagination.cur_page+1, ast_sw='off') }}"><div class="sw_next">Next</div></a>
                                     {% endif %}
                                 </li>
                             </ul>

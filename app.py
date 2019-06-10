@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, url_for
 from src.SearchEngine import SearchEngine
 from src.Pagination import Pagination
-from src.search_engine.main import se, rs
+from src.search_engine.main import se, rs, rel
 
 app = Flask(__name__, template_folder="template", static_folder="static")
 

@@ -3,7 +3,7 @@ import re
 from flask import Markup, url_for
 import pickle
 # import redis
-from src.search_engine.main import se, rs, co
+from src.search_engine.main import se, rs, rel, co, qe
 
 
 class Link:
@@ -38,8 +38,8 @@ class SearchEngine:
         self.need_requery = False
         self.origin_query = query
         self.link_list = []
-        self.rel_people = []
-        self.rel_inst = []
+        self.rel_people = [] # list of ('person name', 'url')
+        self.rel_inst = [] # list of ('org name', 'url')
         # self.r = redis.Redis(host='localhost', port=6379)
 
     def make_redis_key(self):
@@ -55,7 +55,10 @@ class SearchEngine:
                 update1, self.query = co.detect(self.query, co.dict, co.pinyin)
                 update2, self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
                 self.need_requery = update1 or update2
-            flag, scores, cleaned_dict = se.result_by_hot(self.query)
+            cleaned_dict = se.split_query(self.query)
+            if self.ext_query:
+                cleaned_dict = self.query = qe.expansion(cleaned_dict)
+            flag, scores, cleaned_dict = se.result_by_hot(cleaned_dict)
             flag, result_list, captions = rs.return_result(flag, scores, cleaned_dict)
             if flag:
                 for r in result_list:
@@ -70,7 +73,9 @@ class SearchEngine:
         else:
             link_list = pickle.loads(link_list_raw)
         self.link_list = link_list
-        # self.link_list = [Link("www.baidu,com", "中国人民大学", "2019-06-01", "aaaaaaaaaa")] * 10
+
+        self.rel_people = rel.get_relevant_person(scores[:10])
+        self.rel_inst = rel.get_relevant_org(scores[:10])
 
     @property
     def url_num(self):

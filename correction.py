@@ -48,6 +48,7 @@ class Corrector:
 				choice = word
 			if word == query[loc]:
 				gt_value = p
+
 		if max_value > -1.5 or (max_value > -5 and max_value - gt_value > diff):
 			query[loc] = choice
 			return True, query
