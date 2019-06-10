@@ -42,7 +42,7 @@ class Corrector:
 			return False, "".join(query)
 		for word in pydict[py]:
 			p = -10000
-			if loc-1>=0 and word in ngdict[query[loc-1]].keys():
+			if loc-1>=0 and query[loc-1] in ngdict.keys() and word in ngdict[query[loc-1]].keys():
 				p = ngdict[query[loc-1]][word]
 			if loc+1<len(query) and word in ngdict.keys() and query[loc+1] in ngdict[word].keys():
 				p = max(p, ngdict[word][query[loc+1]])
@@ -51,9 +51,9 @@ class Corrector:
 				choice = word
 			if word == query[loc]:
 				gt_value = p
-		print(max_value)
-		print(choice)
-		print(gt_value)
+		# print(max_value)
+		# print(choice)
+		# print(gt_value)
 		if max_value > -1.5 or (max_value > -5 and max_value - gt_value > diff):
 			query[loc] = choice
 			return True, query
@@ -74,22 +74,22 @@ class Corrector:
 			if i != len(query)-1 and query[i+1] != " ":
 				if word in ngdict.keys() and (query[i+1] not in ngdict[word].keys() or ngdict[word][query[i+1]] < self.threshold):
 					right = False
-			print(left)
-			print(right)
+			# print(left)
+			# print(right)
 			if (not right or not left) or (word not in ngdict.keys()):
 				update, query = self.replace(query, i, ngdict, pydict, use_term)
 
 		return update, "".join(query)
 
 
-corrector = Corrector('./config.ini', 'utf-8')
-# print(corrector.dict_term['心系']['学院'])
-# print(corrector.dict_term['信息']['学院'])
-# print(corrector.pinyin_term['xinxi'])
-while True:
-	update1, query = corrector.detect(input('query: '), corrector.dict, corrector.pinyin)
-	update2, query = corrector.detect(query, corrector.dict_term, corrector.pinyin_term, True)
-	print(query)
+# corrector = Corrector('./config.ini', 'utf-8')
+# # print(corrector.dict_term['心系']['学院'])
+# # print(corrector.dict_term['信息']['学院'])
+# # print(corrector.pinyin_term['xinxi'])
+# while True:
+# 	update1, query = corrector.detect(input('query: '), corrector.dict, corrector.pinyin)
+# 	update2, query = corrector.detect(query, corrector.dict_term, corrector.pinyin_term, True)
+# 	print(query)
 
 # 中国人民大学室外场地使用申请表
 # 刘伟校长走访慰问

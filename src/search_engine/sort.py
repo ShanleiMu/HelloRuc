@@ -25,6 +25,7 @@ class Sort:
         f = open(config['DEFAULT']['stop_words_path'], encoding=config['DEFAULT']['stop_words_encoding'])
         words = f.read()
         self.stop_words = set(words.split('\n'))
+        self.user_dict_file = config['DEFAULT']['user_dict_path']
         self.index_file = config['DEFAULT']['index_output_path']
         self.doc_file = config['DEFAULT']['content_data_path']
         self.K1 = float(config['DEFAULT']['k1'])
@@ -34,6 +35,7 @@ class Sort:
         self.AVG_L = float(config['DEFAULT']['avg_l'])
         self.reverse_index_dict = {}
         self.title_dict = {}
+        jieba.load_userdict(self.user_dict_file)
         # self.query_expansion = QueryExpansion()
 
     def load_reverse_index(self):

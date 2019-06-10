@@ -10,4 +10,3 @@ from src.data_cleaning.IndexModule import IndexModule
 if __name__ == '__main__':
     im = IndexModule('config.ini', 'utf-8')
     im.construct_postings_lists()
-

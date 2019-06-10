@@ -36,8 +36,10 @@ class IndexModule:
         config.read(config_path, config_encoding)
         f = open(config['DEFAULT']['stop_words_path'], encoding=config['DEFAULT']['stop_words_encoding'])
         words = f.read()
+        self.user_dict_file = config['DEFAULT']['user_dict_path']
         self.stop_words = set(words.split('\n'))
         self.postings_lists = {}
+        jieba.load_userdict(self.user_dict_file)
 
     def is_number(self, s):
         try:
