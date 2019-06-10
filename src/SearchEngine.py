@@ -57,7 +57,7 @@ class SearchEngine:
                 self.need_requery = update1 or update2
             cleaned_dict = se.split_query(self.query)
             if self.ext_query:
-                cleaned_dict = self.query = qe.expansion(cleaned_dict)
+                cleaned_dict = qe.expansion(cleaned_dict)
             flag, scores, cleaned_dict = se.result_by_hot(cleaned_dict)
             flag, result_list, captions = rs.return_result(flag, scores, cleaned_dict)
             if flag:
