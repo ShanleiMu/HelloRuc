@@ -165,6 +165,36 @@ def save_all_relevant_things(doc_dict: dict, config):
         json.dump([relevant_person, relevant_org], f)
     return
 
+def refine_relevant_things(relevant_things):
+    """
+    merge same word in relevant things
+    """
+    for docid, things in relevant_things.items():
+        new_things = dict()
+        for thing, num in things.items():
+            thing = re.sub(r"[\n\r\t\f\xa0 ]", "", thing)
+            if thing == "":
+                continue
+            if thing in new_things:
+                new_things[thing] += num
+            else:
+                new_things[thing] = num
+        relevant_things[docid] = new_things
+    return relevant_things
+
+def refine_relevant_things_file(file_path: str):
+    """
+    word with space are viewed different in fool.analysis()
+    merge same word in relevant things file
+    rewrite the relevant things file
+    """
+    with open(file_path, 'r', encoding='utf-8') as f:
+        relevant_person, relevant_org = json.load(f)
+    relevant_person = refine_relevant_things(relevant_person)
+    relevant_org = refine_relevant_things(relevant_org)
+    with open(file_path+"new", 'w', encoding='utf-8') as of:
+        json.dump([relevant_person, relevant_org], of)
+
 if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('config.ini', 'utf-8')
@@ -176,5 +206,6 @@ if __name__ == '__main__':
     # print("finished loading doc_dict at", time.asctime(time.localtime(time.time())))
     # save_all_relevant_things(doc_dict, config)
     # relevant_person, relevant_org = load_all_relevant_things(config['DEFAULT']['relevant_things'])
-    re = Relevant(config['DEFAULT']['relevant_things'])
+    # re = Relevant(config['DEFAULT']['relevant_things'])
     # re.relevant_person, re.relevant_org
+    refine_relevant_things_file(config['DEFAULT']['relevant_things'])
