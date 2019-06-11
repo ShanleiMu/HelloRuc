@@ -10,7 +10,10 @@ class QueryExpansion:
     def expansion(self, keyword_dict):
         expand_words = []
         for keyword in keyword_dict:
-            similar_words = self.model.most_similar(keyword, topn=10)
+            try:
+                similar_words = self.model.most_similar(keyword, topn=10)
+            except KeyError:
+                similar_words = []
             for word,  simialrity in similar_words:
                 if simialrity <= 0.75: 
                      continue

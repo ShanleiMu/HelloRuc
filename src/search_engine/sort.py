@@ -248,24 +248,24 @@ class Sort:
             return 0, [], cleaned_dict
         else:
             if department_filter != "":
-            department_dict = {}
-            with open('src/data/department2index.txt') as f_match:
-                for line in f_match:
-                    line = line.strip().split('\t')
-                    line[1] = line[1][:-4]
-                    if line[1][0:6] == "中国人民大学":
-                        line[1] = line[1][6:]
-                    if len(line[1]) > 3 and line[1][-3] == '_':
-                        line[1] = line[1][:-3]
-                    # print(line[1])
-                    department_dict[line[1]] = line[0]
-            new_scores = []
-            for item in hot_scores:
-                key = item[0]
-                value = item[1]
-                if key[0:3] == department_dict[department_filter]:
-                    new_scores.append(item)
-            hot_scores = new_scores
+                department_dict = {}
+                with open('src/data/department2index.txt', encoding='utf-8') as f_match:
+                    for line in f_match:
+                        line = line.strip().split('\t')
+                        line[1] = line[1][:-4]
+                        if line[1][0:6] == "中国人民大学":
+                            line[1] = line[1][6:]
+                        if len(line[1]) > 3 and line[1][-3] == '_':
+                            line[1] = line[1][:-3]
+                        # print(line[1])
+                        department_dict[line[1]] = line[0]
+                new_scores = []
+                for item in hot_scores:
+                    key = item[0]
+                    value = item[1]
+                    if key[0:3] == department_dict[department_filter]:
+                        new_scores.append(item)
+                hot_scores = new_scores
             if time_filter != "":
                 now = datetime.now().strftime('%Y-%m-%d')
                 time_dict = {}
@@ -306,4 +306,3 @@ class Sort:
                     hot_scores = new_scores
 
             return 1, hot_scores, cleaned_dict
-            
