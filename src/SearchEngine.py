@@ -55,9 +55,10 @@ class SearchEngine:
         if link_list_raw is None:
             link_list = []
             if self.requery:
-                update1, self.query = co.detect(self.query, co.dict, co.pinyin)
-                update2, self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
-                self.need_requery = update1 or update2
+                origin_query = self.query
+                self.query = co.detect(self.query, co.dict, co.pinyin)
+                self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
+                self.need_requery = (origin_query != self.query)
             cleaned_dict = se.split_query(self.query)
             if self.ext_query:
                 cleaned_dict = qe.expansion(cleaned_dict)

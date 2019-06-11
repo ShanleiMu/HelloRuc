@@ -33,7 +33,7 @@ class Corrector:
 		choice = query[loc]
 		gt_value = -10.0
 		if py not in pydict.keys():
-			return False, "".join(query)
+			return "".join(query)
 		for word in pydict[py]:
 			p = -10000
 			if loc-1>=0 and query[loc-1] in ngdict.keys() and word in ngdict[query[loc-1]].keys():
@@ -51,12 +51,11 @@ class Corrector:
 
 		if max_value > -1.5 or (max_value > -5 and max_value - gt_value > diff):
 			query[loc] = choice
-			return True, query
+			return query
 		else:
-			return False, query
+			return query
 
 	def detect(self, query, ngdict, pydict, use_term = False):
-		update = False
 		thd = self.threshold
 		if use_term:
 			query = list(jieba.cut(query))
@@ -72,16 +71,16 @@ class Corrector:
 					right = False
 
 			if (not right or not left) or (word not in ngdict.keys()):
-				update, query = self.replace(query, i, ngdict, pydict, use_term)
+				query = self.replace(query, i, ngdict, pydict, use_term)
 
-		return update, "".join(query)
+		return "".join(query)
 
 
 # corrector = Corrector('./config.ini', 'utf-8')
 # # print(corrector.dict['北']['美'])
 # while True:
-# 	update1, query = corrector.detect(input('query: '), corrector.dict, corrector.pinyin)
-# 	update2, query = corrector.detect(query, corrector.dict_term, corrector.pinyin_term, True)
+# 	query = corrector.detect(input('query: '), corrector.dict, corrector.pinyin)
+# 	query = corrector.detect(query, corrector.dict_term, corrector.pinyin_term, True)
 # 	print(query)
 
 # 中国人民大学室外场地使用申请表
