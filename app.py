@@ -6,7 +6,7 @@ from src.search_engine.main import se, rs, rel
 app = Flask(__name__, template_folder="template", static_folder="static")
 
 institutions = [
-    "金融学院", "经济学院", "商学院", "法学院", "新闻学院", "信息学院"
+    "金融学院", "经济学院", "商学院", "新闻学院", "信息学院", "艺术学院", "环境学院"
 ]
 
 times = [
