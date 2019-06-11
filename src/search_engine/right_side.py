@@ -18,6 +18,7 @@ relevant scores: [('docid', score), ...] # sorted
 import re
 import json
 import time
+import math
 import fool
 import configparser
 from collections import Counter
@@ -53,9 +54,9 @@ class Relevant(object):
         for docid, rank in scores[:10]:
             for p, num in self.relevant_person[docid].items():
                 if p in person:
-                    person[p] += num/rank
+                    person[p] += num/math.log(rank+1)
                 else:
-                    person[p] = num/rank
+                    person[p] = num/math.log(rank+1)
         return sorted(person.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_person +1]
     
     def get_relevant_org(self, scores: list):
@@ -71,9 +72,9 @@ class Relevant(object):
         for docid, rank in scores[:10]:
             for o, num in self.relevant_org[docid].items():
                 if o in org:
-                    org[o] += num/rank
+                    org[o] += num/math.log(rank+1)
                 else:
-                    org[o] = num/rank
+                    org[o] = num/math.log(rank+1)
         return sorted(org.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_org +1]
 
     def get_relevant_person_with_url(self, scores: list):
