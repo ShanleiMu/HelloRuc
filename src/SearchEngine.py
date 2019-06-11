@@ -61,7 +61,7 @@ class SearchEngine:
             cleaned_dict = se.split_query(self.query)
             if self.ext_query:
                 cleaned_dict = qe.expansion(cleaned_dict)
-            flag, scores, cleaned_dict = se.result_by_hot(cleaned_dict)
+            flag, scores, cleaned_dict = se.result_by_hot(cleaned_dict, self.inst_filter, self.time_filter)
             flag, result_list, captions = rs.return_result(flag, scores, cleaned_dict)
             if flag:
                 for r in result_list:
