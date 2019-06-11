@@ -2,7 +2,7 @@ import math
 import re
 from flask import Markup, url_for
 import pickle
-# import redis
+import redis
 from src.search_engine.main import se, rs, rel, co, qe
 
 
@@ -43,14 +43,14 @@ class SearchEngine:
         self.link_list = []
         self.rel_people = [] # list of ('person name', 'url')
         self.rel_inst = [] # list of ('org name', 'url')
-        # self.r = redis.Redis(host='localhost', port=6379)
+        self.r = redis.Redis(host='localhost', port=6379)
 
     def make_redis_key(self):
         return self.query + "_{" + self.inst_filter + "}" + "^{" + self.time_filter + "}" + str(self.requery)
 
     def search(self):
-        # link_list_raw = self.r.get(self.make_redis_key())
-        link_list_raw = None
+        link_list_raw = self.r.get(self.make_redis_key())
+        # link_list_raw = None
         
         if link_list_raw is None:
             link_list = []
@@ -73,7 +73,7 @@ class SearchEngine:
                     title = Markup(rs.deal_title(title, cleaned_dict))
                     caption = Markup(captions[docid])
                     link_list.append(Link(docid, url, title, date, caption))
-                # self.r.set(self.make_redis_key(), pickle.dumps(link_list))
+                self.r.set(self.make_redis_key(), pickle.dumps(link_list))
         else:
             link_list = pickle.loads(link_list_raw)
         self.link_list = link_list
