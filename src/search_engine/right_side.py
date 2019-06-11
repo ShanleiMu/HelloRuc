@@ -42,38 +42,36 @@ class Relevant(object):
 
     def get_relevant_person(self, scores: list):
         """
-        havn't decide the weighting method yet
-        using unweighted method now, means each item in scores(list) viewed the same
+        using weighted method
         args:
             scores: sorted list, [('docid', score), ...], suggested length <= 10
         return:
             a sorted list of ('relevant person name', num shown)
         """
         person = dict()
-        for docid, _score in scores[:10]:
+        for docid, score in scores[:10]:
             for p, num in self.relevant_person[docid].items():
                 if p in person:
-                    person[p] += num
+                    person[p] += num*score
                 else:
-                    person[p] = num
+                    person[p] = num*score
         return sorted(person.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_person]
     
     def get_relevant_org(self, scores: list):
         """
-        havn't decide the weighting method yet
-        using unweighted method now, means each item in scores(list) viewed the same
+        using weighted method
         args:
             scores: sorted list, [('docid', score), ...], suggested length <= 10
         return:
             a sorted list of ('relevant organization name', num shown)
         """
         org = dict()
-        for docid, _score in scores[:10]:
+        for docid, score in scores[:10]:
             for o, num in self.relevant_org[docid].items():
                 if o in org:
-                    org[o] += num
+                    org[o] += num*score
                 else:
-                    org[o] = num
+                    org[o] = num*score
         return sorted(org.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_org]
 
     def get_relevant_person_with_url(self, scores: list):
