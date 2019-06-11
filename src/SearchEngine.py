@@ -10,7 +10,8 @@ class Link:
     pattern_prefix = re.compile(r'.*://')
     pattern_suffix = re.compile(r'/.*')
 
-    def __init__(self, url, title, date, caption):
+    def __init__(self, docid, url, title, date, caption):
+        self.docid = docid
         self.url = url
         self.title = title
         self.date = date
@@ -23,7 +24,7 @@ class Link:
 
 
 class SearchEngine:
-    def __init__(self, query="", inst_filter="", time_filter="", requery=True, ext_query=False):
+    def __init__(self, query="", page=1, per_page=10, inst_filter="", time_filter="", requery=True, ext_query=False):
         """
         url_per_page: the amount of urls to be displayed on a body
         query: string of the query
@@ -31,6 +32,8 @@ class SearchEngine:
         """
         self.url_per_page = 10
         self.query = query
+        self.page = page
+        self.per_page = 10
         self.inst_filter = inst_filter
         self.time_filter = time_filter
         self.requery = requery
@@ -52,13 +55,14 @@ class SearchEngine:
         if link_list_raw is None:
             link_list = []
             if self.requery:
-                update1, self.query = co.detect(self.query, co.dict, co.pinyin)
-                update2, self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
-                self.need_requery = update1 or update2
+                origin_query = self.query
+                self.query = co.detect(self.query, co.dict, co.pinyin)
+                self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
+                self.need_requery = (origin_query != self.query)
             cleaned_dict = se.split_query(self.query)
             if self.ext_query:
-                cleaned_dict = self.query = qe.expansion(cleaned_dict)
-            flag, scores, cleaned_dict = se.result_by_hot(cleaned_dict)
+                cleaned_dict = qe.expansion(cleaned_dict)
+            flag, scores, cleaned_dict = se.result_by_hot(cleaned_dict, self.inst_filter, self.time_filter)
             flag, result_list, captions = rs.return_result(flag, scores, cleaned_dict)
             if flag:
                 for r in result_list:
@@ -68,14 +72,17 @@ class SearchEngine:
                     date = r[2]
                     title = Markup(rs.deal_title(title, cleaned_dict))
                     caption = Markup(captions[docid])
-                    link_list.append(Link(url, title, date, caption))
+                    link_list.append(Link(docid, url, title, date, caption))
                 # self.r.set(self.make_redis_key(), pickle.dumps(link_list))
         else:
             link_list = pickle.loads(link_list_raw)
         self.link_list = link_list
-
-        self.rel_people = rel.get_relevant_person(scores[:10])
-        self.rel_inst = rel.get_relevant_org(scores[:10])
+        left_side = self.link_list[(self.page-1)*self.per_page : self.page*self.per_page]
+        left_side_score = [(link.docid, pos) for link, pos in zip(left_side, range(1, self.per_page+1))]
+        rel_people = rel.get_relevant_person_with_url(left_side_score)
+        rel_inst = rel.get_relevant_org_with_url(left_side_score)
+        self.rel_people = self.remove_qword(rel_people, rel.num_rightside_person)
+        self.rel_inst = self.remove_qword(rel_inst, rel.num_rightside_org)
 
     @property
     def url_num(self):
@@ -109,3 +116,18 @@ class SearchEngine:
 
     def get_result(self, page):
         return self.url_num, self.need_requery, self.origin_query, self.query, self.get_page_list(page), self.rel_people, self.rel_inst
+
+    def remove_qword(self, rel_list, length):
+        """
+        remove relevant things that contain query itself
+        (can contain part of the query)
+        args:
+            rel_list: a list of ('relevant thing', 'url') pair
+            length: int, length of return list
+        return:
+            rel_list: a list of ('relevant thing', 'url') pair, len(rel_list)==length
+        """
+        for i, thing in enumerate(rel_list):
+            if thing[0] == self.query:
+                del rel_list[i]
+        return rel_list[:length]

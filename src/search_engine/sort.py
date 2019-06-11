@@ -182,7 +182,7 @@ class Sort:
         n, cleaned_dict = self.clean_list(seg_list)
         return cleaned_dict
 
-    def result_by_hot(self, cleaned_dict):
+    def result_by_hot(self, cleaned_dict, department_filter, time_filter):
         print('cleaned_dict: ', cleaned_dict)
         # cleaned_dict = self.query_expansion.expansion(cleaned_dict)
         # print('cleaned_dict: ', cleaned_dict)
@@ -218,7 +218,7 @@ class Sort:
                     except ValueError:
                         td = 25000.00
                     bm25_score = math.log(bm25_score + 1)
-                    time_score = 1 / (td + 100)
+                    time_score = math.exp((1 + 10) / (td + 20))
                     hot_score = bm25_score + time_score
                     if docid in hot_scores:
                         hot_scores[docid] = hot_scores[docid] + hot_score
@@ -247,4 +247,62 @@ class Sort:
         if len(hot_scores) == 0:
             return 0, [], cleaned_dict
         else:
+            if department_filter != "":
+                department_dict = {}
+                with open('src/data/department2index.txt', encoding='utf-8') as f_match:
+                    for line in f_match:
+                        line = line.strip().split('\t')
+                        line[1] = line[1][:-4]
+                        if line[1][0:6] == "中国人民大学":
+                            line[1] = line[1][6:]
+                        if len(line[1]) > 3 and line[1][-3] == '_':
+                            line[1] = line[1][:-3]
+                        # print(line[1])
+                        department_dict[line[1]] = line[0]
+                new_scores = []
+                for item in hot_scores:
+                    key = item[0]
+                    value = item[1]
+                    if key[0:3] == department_dict[department_filter]:
+                        new_scores.append(item)
+                hot_scores = new_scores
+            if time_filter != "":
+                now = datetime.now().strftime('%Y-%m-%d')
+                time_dict = {}
+                with open(self.doc_file, 'r', encoding='utf-8') as fp:
+                    for line in fp:
+                        line_splited = line.strip().split('|||')
+                        docid = line_splited[0]
+                        time = line_splited[2]
+                        time_dict[docid] = time
+                print(time_dict)
+                if time_filter == "最近一月":
+                    new_scores = []
+                    for item in hot_scores:
+                        key = item[0]
+                        value = item[1]
+                        if (time_dict[key][:4] == now[:4]) and ((int(time_dict[key][5:7]) == int(now[5:7])) or\
+                                ((int(time_dict[key][5:7]) == int(now[5:7]) - 1)) and (int(time_dict[key][8:10]) > int(now[8:10]))):
+                            new_scores.append(item)
+                    hot_scores = new_scores
+                if time_filter == "最近三月":
+                    new_scores = []
+                    for item in hot_scores:
+                        key = item[0]
+                        value = item[1]
+                        if (time_dict[key][:4] == now[:4]) and ((int(time_dict[key][5:7]) >= int(now[5:7]) - 2) or \
+                                                                ((int(time_dict[key][5:7]) == int(now[5:7]) - 3)) and (
+                                                                        int(time_dict[key][8:10]) > int(now[8:10]))):
+                            new_scores.append(item)
+                    hot_scores = new_scores
+                if time_filter == "最近一年":
+                    new_scores = []
+                    for item in hot_scores:
+                        key = item[0]
+                        value = item[1]
+                        if (time_dict[key][:4] == now[:4]) or (int((time_dict[key][:4]) == int(now[:4])-1) and \
+                                                               (int((time_dict[key][5:7]) > int(now[5:7])-1))):
+                            new_scores.append(item)
+                    hot_scores = new_scores
+
             return 1, hot_scores, cleaned_dict

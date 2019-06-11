@@ -21,55 +21,60 @@ import time
 import fool
 import configparser
 from collections import Counter
+# from flask import url_for
 
 # this class is the only thing that can be imported from outside this file
 class Relevant(object):
     
+    num_rightside_person = 10
+    num_rightside_org = 10
+    # self.url_prefix = "https://www.baidu.com/s?wd=" # + "person_name/org_name"
+    url_prefix = "http://127.0.0.1:5000/search/?q=" # + "person_name/org_name"
+
     def __init__(self, relevant_things_path="src/data/processed_data/ruc_relevant_things.json"):
         """
         relevant_person: dict, {'docid': {'person': num shown, ...}, ...}
         relevant_org: dict, {'docid': {'org': num shown, ...}, ...}
         """
-        self.url_prefix = "https://www.baidu.com/s?wd=" # + "person_name/org_name"
         f = open(relevant_things_path, 'r', encoding='utf-8')
         self.relevant_person, self.relevant_org = json.load(f)
         f.close()
 
     def get_relevant_person(self, scores: list):
         """
-        havn't decide the weighting method yet
-        using unweighted method now, means each item in scores(list) viewed the same
+        using weighted method
         args:
             scores: sorted list, [('docid', score), ...], suggested length <= 10
+            score is rank, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         return:
             a sorted list of ('relevant person name', num shown)
         """
         person = dict()
-        for docid, _score in scores[:10]:
+        for docid, rank in scores[:10]:
             for p, num in self.relevant_person[docid].items():
                 if p in person:
-                    person[p] += num
+                    person[p] += num/rank
                 else:
-                    person[p] = num
-        return sorted(person.items(), key=lambda k: k[1], reverse=True)
+                    person[p] = num/rank
+        return sorted(person.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_person +1]
     
     def get_relevant_org(self, scores: list):
         """
-        havn't decide the weighting method yet
-        using unweighted method now, means each item in scores(list) viewed the same
+        using weighted method
         args:
             scores: sorted list, [('docid', score), ...], suggested length <= 10
+            score is rank, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         return:
             a sorted list of ('relevant organization name', num shown)
         """
         org = dict()
-        for docid, _score in scores[:10]:
+        for docid, rank in scores[:10]:
             for o, num in self.relevant_org[docid].items():
                 if o in org:
-                    org[o] += num
+                    org[o] += num/rank
                 else:
-                    org[o] = num
-        return sorted(org.items(), key=lambda k: k[1], reverse=True)
+                    org[o] = num/rank
+        return sorted(org.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_org +1]
 
     def get_relevant_person_with_url(self, scores: list):
         """
@@ -80,7 +85,8 @@ class Relevant(object):
             'relevant person name' is sorted
         """
         person_score_list = self.get_relevant_person(scores)
-        person_url_list = [(person_name, self.url_prefix + person_name) for person_name, _score in person_score_list]
+        # person_url_list = [(person_name, url_for('search', q=person_name)) for person_name, _score in person_score_list]
+        person_url_list = [(person_name, self.url_prefix + person_name) for person_name, _score in person_score_list]        
         return person_url_list
 
     def get_relevant_org_with_url(self, scores: list):
@@ -92,6 +98,7 @@ class Relevant(object):
             'relevant org name' is sorted
         """
         org_score_list = self.get_relevant_org(scores)
+        # org_url_list = [(org_name, url_for('search', q=org_name)) for org_name, _score in org_score_list]
         org_url_list = [(org_name, self.url_prefix + org_name) for org_name, _score in org_score_list]
         return org_url_list
 
@@ -160,6 +167,36 @@ def save_all_relevant_things(doc_dict: dict, config):
         json.dump([relevant_person, relevant_org], f)
     return
 
+def refine_relevant_things(relevant_things):
+    """
+    merge same word in relevant things
+    """
+    for docid, things in relevant_things.items():
+        new_things = dict()
+        for thing, num in things.items():
+            thing = re.sub(r"[\n\r\t\f\xa0 ]", "", thing)
+            if thing == "":
+                continue
+            if thing in new_things:
+                new_things[thing] += num
+            else:
+                new_things[thing] = num
+        relevant_things[docid] = new_things
+    return relevant_things
+
+def refine_relevant_things_file(file_path: str):
+    """
+    word with space are viewed different in fool.analysis()
+    merge same word in relevant things file
+    rewrite the relevant things file
+    """
+    with open(file_path, 'r', encoding='utf-8') as f:
+        relevant_person, relevant_org = json.load(f)
+    relevant_person = refine_relevant_things(relevant_person)
+    relevant_org = refine_relevant_things(relevant_org)
+    with open(file_path+"new", 'w', encoding='utf-8') as of:
+        json.dump([relevant_person, relevant_org], of)
+
 if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('config.ini', 'utf-8')
@@ -171,5 +208,6 @@ if __name__ == '__main__':
     # print("finished loading doc_dict at", time.asctime(time.localtime(time.time())))
     # save_all_relevant_things(doc_dict, config)
     # relevant_person, relevant_org = load_all_relevant_things(config['DEFAULT']['relevant_things'])
-    re = Relevant(config['DEFAULT']['relevant_things'])
+    # re = Relevant(config['DEFAULT']['relevant_things'])
     # re.relevant_person, re.relevant_org
+    refine_relevant_things_file(config['DEFAULT']['relevant_things'])

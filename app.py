@@ -6,11 +6,11 @@ from src.search_engine.main import se, rs, rel
 app = Flask(__name__, template_folder="template", static_folder="static")
 
 institutions = [
-    "金融学院", "经济学院", "商学院", "法学院", "新闻学院", "信息学院"
+    "财政金融学院", "经济学院", "商学院", "新闻学院", "信息学院", "艺术学院", "环境学院"
 ]
 
 times = [
-    "最近一周", "最近一月", "最近三月", "最近一年"
+    "最近一月", "最近三月", "最近一年"
 ]
 
 
@@ -34,7 +34,7 @@ def search():
 
     if query == "":
         return render_template("index.html")
-    search_engine = SearchEngine(query=query, requery=requery, inst_filter=inst_filter,
+    search_engine = SearchEngine(query=query, page=cur_page, per_page=Pagination.per_page, requery=requery, inst_filter=inst_filter,
                                  time_filter=time_filter, ext_query=ext_query)
     search_engine.search()
     result_num, need_requery, origin_query, query, link_list, rel_people, rel_inst = search_engine.get_result(cur_page)
