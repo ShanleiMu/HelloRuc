@@ -33,7 +33,7 @@ class SearchEngine:
         self.url_per_page = 10
         self.query = query
         self.page = page
-        self.per_page = 10
+        self.per_page = per_page
         self.inst_filter = inst_filter
         self.time_filter = time_filter
         self.requery = requery

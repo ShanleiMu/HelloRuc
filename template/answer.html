@@ -126,9 +126,9 @@
                         </a>
                         <div id="d5092" class=" b_dropdown " role="menu">
                             <div class="ftrD" id="ftrD_Any_time">
-                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, time_filter='')}}">All</a>
+                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, time_filter='', inst_filter=inst_filter, ast_sw=ast_sw)}}">All</a>
                                 {% for time in times %}
-                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, time_filter=time)}}">{{ time }}</a>
+                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, time_filter=time, inst_filter=inst_filter, ast_sw=ast_sw)}}">{{ time }}</a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -146,9 +146,9 @@
                         </a>
                         <div id="d5091" class=" b_dropdown " role="menu">
                             <div class="ftrD" id="ftrD_Any_inst">
-                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, inst_filter='')}}">All</a>
+                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=origin_query, inst_filter='', time_filter=time_filter, ast_sw=ast_sw)}}">All</a>
                                 {% for inst in institutions %}
-                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=query, inst_filter=inst)}}">{{ inst }}</a>
+                                <a class="b_toggle " role="menuitem" href="{{ url_for('search', q=origin_query, inst_filter=inst, time_filter=time_filter, ast_sw=ast_sw)}}">{{ inst }}</a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                                     {% if pagination.is_first_page %}
                                     <a class="sb_inactP sb_pagP sb_pagP_bp b_widePag sb_bp b_roths"></a>
                                     {% else %}
-                                    <a class="sb_pagP sb_pagP_bp b_widePag sb_bp b_roths" title="Previous page" href="{{ url_for('search', q=origin_query, page=pagination.cur_page-1, ast_sw='off') }}">
+                                    <a class="sb_pagP sb_pagP_bp b_widePag sb_bp b_roths" title="Previous page" href="{{ url_for('search', q=origin_query, page=pagination.cur_page-1, ast_sw='off', inst_filter=inst_filter, time_filter=time_filter) }}">
                                         <div class="sw_prev">Previous</div>
                                     </a>
                                     {% endif %}
@@ -218,7 +218,7 @@
                                     {% if page == pagination.cur_page %}
                                     <a class="sb_pagS sb_pagS_bp b_widePag sb_bp">{{ page }}</a>
                                     {% else %}
-                                    <a class="b_widePag sb_bp" href="{{ url_for('search', q=origin_query, page=page, ast_sw='off') }}">{{ page }}</a>
+                                    <a class="b_widePag sb_bp" href="{{ url_for('search', q=origin_query, page=page, ast_sw='off', inst_filter=inst_filter, time_filter=time_filter) }}">{{ page }}</a>
                                     {% endif%}
                                 </li>
                                 {% endfor %}
@@ -226,7 +226,7 @@
                                     {% if pagination.is_last_page %}
                                     <a class="sb_inactP sb_pagN sb_pagN_bp b_widePag sb_bp"></a>
                                     {% else %}
-                                    <a class="sb_pagN sb_pagN_bp b_widePag sb_bp " title="Next page" href="{{ url_for('search', q=origin_query, page=pagination.cur_page+1, ast_sw='off') }}"><div class="sw_next">Next</div></a>
+                                    <a class="sb_pagN sb_pagN_bp b_widePag sb_bp " title="Next page" href="{{ url_for('search', q=origin_query, page=pagination.cur_page+1, ast_sw='off', inst_filter=inst_filter, time_filter=time_filter) }}"><div class="sw_next">Next</div></a>
                                     {% endif %}
                                 </li>
                             </ul>
@@ -236,6 +236,7 @@
             </main>
             <aside aria-label="Additional Results">
                 <ol id="b_context">
+                    {% if rel_people != [] %}
                     <li class="b_ans">
                         <div class="b_rrsr">
                             <h2 class="">Related People</h2>
@@ -248,6 +249,8 @@
                             </ul>
                         </div>
                     </li>
+                    {% endif %}
+                    {% if rel_inst != [] %}
                     <li class="b_ans">
                         <div class="b_rrsr">
                             <h2 class="">Related Institutions</h2>
@@ -260,6 +263,7 @@
                             </ul>
                         </div>
                     </li>
+                    {% endif %}
                 </ol>
             </aside>
         </div>
