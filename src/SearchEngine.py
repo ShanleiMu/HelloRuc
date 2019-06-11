@@ -77,7 +77,7 @@ class SearchEngine:
             link_list = pickle.loads(link_list_raw)
         self.link_list = link_list
         left_side = self.link_list[(self.page-1)*self.per_page : self.page*self.per_page]
-        left_side_score = [(link.docid, pos) for link, pos in zip(left_side, range(self.per_page, 0, -1))]
+        left_side_score = [(link.docid, pos) for link, pos in zip(left_side, range(1, self.per_page+1))]
         rel_people = rel.get_relevant_person_with_url(left_side_score)
         rel_inst = rel.get_relevant_org_with_url(left_side_score)
         self.rel_people = self.remove_qword(rel_people, rel.num_rightside_person)
