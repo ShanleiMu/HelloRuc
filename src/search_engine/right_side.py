@@ -55,7 +55,7 @@ class Relevant(object):
                     person[p] += num*score
                 else:
                     person[p] = num*score
-        return sorted(person.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_person]
+        return sorted(person.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_person +1]
     
     def get_relevant_org(self, scores: list):
         """
@@ -72,7 +72,7 @@ class Relevant(object):
                     org[o] += num*score
                 else:
                     org[o] = num*score
-        return sorted(org.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_org]
+        return sorted(org.items(), key=lambda k: k[1], reverse=True)[:self.num_rightside_org +1]
 
     def get_relevant_person_with_url(self, scores: list):
         """

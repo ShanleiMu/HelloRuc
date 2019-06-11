@@ -78,9 +78,10 @@ class SearchEngine:
         self.link_list = link_list
         left_side = self.link_list[(self.page-1)*self.per_page : self.page*self.per_page]
         left_side_score = [(link.docid, pos) for link, pos in zip(left_side, range(self.per_page, 0, -1))]
-        self.rel_people = rel.get_relevant_person_with_url(left_side_score)
-        self.rel_inst = rel.get_relevant_org_with_url(left_side_score)
-
+        rel_people = rel.get_relevant_person_with_url(left_side_score)
+        rel_inst = rel.get_relevant_org_with_url(left_side_score)
+        self.rel_people = self.remove_qword(rel_people, rel.num_rightside_person)
+        self.rel_inst = self.remove_qword(rel_inst, rel.num_rightside_org)
 
     @property
     def url_num(self):
@@ -114,3 +115,18 @@ class SearchEngine:
 
     def get_result(self, page):
         return self.url_num, self.need_requery, self.origin_query, self.query, self.get_page_list(page), self.rel_people, self.rel_inst
+
+    def remove_qword(self, rel_list, length):
+        """
+        remove relevant things that contain query itself
+        (can contain part of the query)
+        args:
+            rel_list: a list of ('relevant thing', 'url') pair
+            length: int, length of return list
+        return:
+            rel_list: a list of ('relevant thing', 'url') pair, len(rel_list)==length
+        """
+        for i, thing in enumerate(rel_list):
+            if thing[0] == self.query:
+                del rel_list[i]
+        return rel_list[:length]
