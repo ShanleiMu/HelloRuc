@@ -175,10 +175,10 @@
                     </script>
                 </div>
                 <div class="sp_url">
-                    <div id="sp_extquery"><a href="{{ url_for('search', q=query, extquery=True) }}">对结果不满意？</a></div>
+                    <div id="sp_extquery"><a href="{{ url_for('search', q=origin_query, extquery=True, ast_sw=ast_sw, time_filter=time_filter, inst_filter=inst_filter) }}">对结果不满意？</a></div>
                     {% if need_requery %}
-                    <div id="sp_requery">Including results for <a href="{{ url_for('search', q=query) }}"><strong>{{ query }}</strong></a>.</div>
-                    <div id="sp_recourse">Do you want results only for <a href="{{ url_for('search', q=origin_query, ast_sw='off') }}">{{ origin_query }}</a>?</div>
+                    <div id="sp_requery">Including results for <a href="{{ url_for('search', q=query, time_filter=time_filter, inst_filter=inst_filter) }}"><strong>{{ query }}</strong></a>.</div>
+                    <div id="sp_recourse">Do you want results only for <a href="{{ url_for('search', q=origin_query, ast_sw='off', time_filter=time_filter, inst_filter=inst_filter) }}">{{ origin_query }}</a>?</div>
                     {% endif %}
                 </div>
                 <ol id="b_results">
