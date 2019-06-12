@@ -17,12 +17,12 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header hidden-xs">
-                <a class="navbar-brand" href="/index/index/index.html">Hello RUC</a>
+                <a class="navbar-brand" href="{{ url_for('root') }}">Hello RUC</a>
             </div>
             <div class=" navbar-collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li id="header-home">
-                        <a href="/index/index/index.html">首页</a>
+                        <a href="{{ url_for('root') }}">首页</a>
                     </li>
                     <li class="dropdown">
                         <a href="https://www.ruc.edu.cn/administration" class="dropdown-toggle"  data-toggle="dropdown">
@@ -85,7 +85,7 @@
                         </li>
                    <button class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
                    <li id="header-message" class="dropdown hidden-xs" ng-controller="messages">
-                        <a id="title-msg" data-toggle="dropdown" class="dropdown-toggle" href="/index/home/getmsg.html">
+                        <a id="title-msg" data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="glyphicon glyphicon-envelope" title="联系我们" ng-bind="msgs.length"></span>
                         </a>
                     </li>
@@ -96,7 +96,7 @@
     <div class="container">
         <header id="b_header">
                 <a class="b_logoArea" href="/?FORM=Z9FD1" h="ID=SERP,5025.1">
-                    <h1 class="b_logo" title="Back to Bing search" aria-label="Go to Bing homepage">
+                    <h1 class="b_logo" title="Back to Hello RUC" aria-label="Go to Hello RUC homepage">
                         <img src="{{url_for('static', filename='image/logo02-cropped.png')}}"  style="width: 90px" />
                     </h1>
                 </a>

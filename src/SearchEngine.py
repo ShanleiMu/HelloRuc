@@ -46,19 +46,23 @@ class SearchEngine:
         self.r = redis.Redis(host='localhost', port=6379)
 
     def make_redis_key(self):
-        return self.query + "_{" + self.inst_filter + "}" + "^{" + self.time_filter + "}" + str(self.requery)
+        return self.query + "_" + self.inst_filter + \
+               "_" + self.time_filter + \
+               "_" + str(self.requery) + \
+               "_" + str(self.ext_query)
 
     def search(self):
+        if self.requery:
+            origin_query = self.query
+            self.query = co.detect(self.query, co.dict, co.pinyin)
+            self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
+            self.need_requery = (origin_query != self.query)
+
         link_list_raw = self.r.get(self.make_redis_key())
         # link_list_raw = None
-        
+
         if link_list_raw is None:
             link_list = []
-            if self.requery:
-                origin_query = self.query
-                self.query = co.detect(self.query, co.dict, co.pinyin)
-                self.query = co.detect(self.query, co.dict_term, co.pinyin_term, True)
-                self.need_requery = (origin_query != self.query)
             cleaned_dict = se.split_query(self.query)
             if self.ext_query:
                 cleaned_dict = qe.expansion(cleaned_dict)
