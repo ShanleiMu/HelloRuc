@@ -41,5 +41,5 @@ def GetCaption(docs, results, query_terms, length = 88):
 				else:
 					content = content[:loc] + "<strong>" + content[loc:loc+len(term)] + "</strong>" + content[loc+len(term):]
 					last = loc + 17 + len(term)
-		captions[docid] = content
+		captions[docid] = content + '...'
 	return captions
