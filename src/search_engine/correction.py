@@ -50,6 +50,8 @@ class Corrector:
 				gt_value = p
 
 		if max_value > -1.5 or (max_value > -5 and max_value - gt_value > diff):
+			if type(query) is not list:
+				query = list(query)
 			query[loc] = choice
 			return query
 		else:
